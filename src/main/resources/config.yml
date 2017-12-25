@@ -1,0 +1,16 @@
+version: 2.0
+blocks:
+- diamond_block
+- emerald_block
+- gold_block
+- coal_block
+pickup: true
+full:
+  drop: true
+  message:
+    use: true
+    cooldown: 5
+require_survival: true
+tracking:
+  enabled: false
+  save_rate: 6000

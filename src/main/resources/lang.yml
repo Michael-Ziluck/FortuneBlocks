@@ -1,0 +1,17 @@
+prefix:
+  use: false
+  text: '&3[&bFortuneBlocks&3]'
+usage_message: '`&6&lUSAGE &e» &f{usage}'
+no_permissions: '&4&lERROR &c» &7You don''t have permission to do that.'
+no_sub_access: '&4&lERROR &c» &7You don''t have access to any sub-commands.'
+inventory_full: '&4&lERROR &c» &7Your inventory is full.'
+reload: '&2&lSUCCESS &a» &fReloaded the config and lang files.'
+header_footer: '&7&m----------------------------------------------------'
+materials:
+  add: '&2&lSUCCESS &a» &fThe material &b{material}&f now has fortune.'
+  remove: '&2&lSUCCESS &a» &fThe material &b{material}&f no longer has fortune.'
+  tracked: '&4&lERROR &c» &7That material is already tracked.'
+  not_tracked: '&4&lERROR &c» &7That material is not tracked.'
+  invalid_item: '&4&lERROR &c» &7Item not found.'
+  not_block: '&4&lERROR &c» &7That item is not a block.'
+  list: '  &6- &e{material}'
