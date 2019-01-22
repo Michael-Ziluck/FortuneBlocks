@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.doctorzee.fortuneblocks.FortuneBlocks;
+import com.doctorzee.fortuneblocks.Permission;
+import com.doctorzee.fortuneblocks.configuration.Config;
+import com.doctorzee.fortuneblocks.handlers.BlockHandler;
+import com.doctorzee.fortuneblocks.utils.VersionUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,14 +20,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.doctorzee.fortuneblocks.FortuneBlocks;
-import com.doctorzee.fortuneblocks.Permission;
-import com.doctorzee.fortuneblocks.handlers.BlockHandler;
-import com.doctorzee.fortuneblocks.utils.VersionUtils;
-
 public class BlockListener implements Listener
 {
-
     // cooldown on sending them full messages
     private final HashMap<String, Long> fullMessageCooldown = new HashMap<>();
 
@@ -36,7 +35,7 @@ public class BlockListener implements Listener
         }
 
         // track placed
-        if (FortuneBlocks.getConfigHandler().getBoolean("tracking.enabled") && !event.getPlayer().hasPermission(Permission.SILENT_PLACE.getPermission()))
+        if (Config.TRACKING_ENABLED.booleanValue() && !event.getPlayer().hasPermission(Permission.SILENT_PLACE.getPermission()))
         {
             BlockHandler.setPlaced(event.getBlock());
         }
@@ -52,12 +51,12 @@ public class BlockListener implements Listener
             return;
         }
         // if they aren't in survival, ignore them
-        if (FortuneBlocks.getConfigHandler().getBoolean("require_survival") && event.getPlayer().getGameMode() != GameMode.SURVIVAL)
+        if (Config.REQUIRE_SURVIVAL.booleanValue() && event.getPlayer().getGameMode() != GameMode.SURVIVAL)
         {
             return;
         }
         // if it was placed, ignore it
-        if (FortuneBlocks.getConfigHandler().getBoolean("tracking.enabled") && BlockHandler.wasPlaced(event.getBlock()))
+        if (Config.TRACKING_ENABLED.booleanValue() && BlockHandler.wasPlaced(event.getBlock()))
         {
             return;
         }
@@ -73,7 +72,7 @@ public class BlockListener implements Listener
         VersionUtils.stopDrops(event);
 
         // if everyone has it or they have the permission, send it to their inventory
-        if (FortuneBlocks.getConfigHandler().getBoolean("pickup") || event.getPlayer().hasPermission(Permission.PICKUP.getPermission()))
+        if (Config.PICKUP.booleanValue() || event.getPlayer().hasPermission(Permission.PICKUP.getPermission()))
         {
             // check if their inventory is full.
             boolean full = true;
@@ -102,7 +101,7 @@ public class BlockListener implements Listener
             if (full)
             {
                 // check if we should message them
-                if (FortuneBlocks.getConfigHandler().getBoolean("full.message.use"))
+                if (Config.FULL_MESSAGE_USE.booleanValue())
                 {
                     // default to true
                     boolean message = true;

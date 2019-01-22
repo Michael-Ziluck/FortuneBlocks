@@ -1,49 +1,28 @@
 package com.doctorzee.fortuneblocks;
 
 import java.io.File;
+import java.util.logging.FileHandler;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.doctorzee.fortuneblocks.api.FileHandler;
-import com.doctorzee.fortuneblocks.api.LangHandler;
 import com.doctorzee.fortuneblocks.api.commands.CommandHandler;
 import com.doctorzee.fortuneblocks.commands.FortuneBlocksCommand;
+import com.doctorzee.fortuneblocks.configuration.Config;
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.handlers.BlockHandler;
 import com.doctorzee.fortuneblocks.listeners.BlockListener;
-import com.doctorzee.fortuneblocks.utils.ItemDb;
+import com.doctorzee.fortuneblocks.utils.items.ItemDb;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class FortuneBlocks extends JavaPlugin
 {
 
     private static FortuneBlocks instance;
 
-    private static File configFile;
-    private static FileHandler configHandler;
-
-    private static File langFile;
-    private static LangHandler langHandler;
-
-    private static File itemFile;
     private static ItemDb itemHandler;
 
     public void onEnable()
     {
         instance = this;
-
-        saveDefaultConfig();
-
-        configFile = new File(getDataFolder(), "config.yml");
-        langFile = new File(getDataFolder(), "lang.yml");
-        itemFile = new File(getDataFolder(), "items.csv");
-
-        if (!getConfig().isSet("version") || !getConfig().getString("version").equals("2.0"))
-        {
-            getLogger().info("Detected old config. Overriding old settings with new version.");
-            saveResource("config.yml", true);
-            saveResource("lang.yml", true);
-            saveResource("items.csv", true);
-        }
 
         reloadConfiguration();
 
@@ -55,23 +34,29 @@ public class FortuneBlocks extends JavaPlugin
 
     public static void reloadConfiguration()
     {
-        if (!itemFile.exists())
-        {
-            instance.saveResource("items.csv", false);
-        }
-        itemHandler = new ItemDb(itemFile);
-
-        if (!configFile.exists())
-        {
-            instance.saveDefaultConfig();
-        }
-        configHandler = new FileHandler(configFile, instance);
-
+        // check lang
+        File langFile = new File(instance.getDataFolder(), "lang.yml");
         if (!langFile.exists())
         {
             instance.saveResource("lang.yml", false);
         }
-        langHandler = new LangHandler(langFile, instance);
+        Lang.update();
+
+        // check config
+        File configFile = new File(instance.getDataFolder(), "config.yml");
+        if (!configFile.exists())
+        {
+            instance.saveDefaultConfig();
+        }
+        Config.update();
+
+        // check items
+        File itemFile = new File(instance.getDataFolder(), "items.json");
+        if (!itemFile.exists())
+        {
+            instance.saveResource("items.json", false);
+        }
+        itemHandler = new ItemDb(itemFile);
 
         BlockHandler.initialize();
     }
@@ -79,16 +64,6 @@ public class FortuneBlocks extends JavaPlugin
     public static ItemDb getItemHandler()
     {
         return itemHandler;
-    }
-
-    public static FileHandler getConfigHandler()
-    {
-        return configHandler;
-    }
-
-    public static LangHandler getLangHandler()
-    {
-        return langHandler;
     }
 
     public static FortuneBlocks getInstance()

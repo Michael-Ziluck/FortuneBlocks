@@ -2,16 +2,13 @@ package com.doctorzee.fortuneblocks.commands;
 
 import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.material.MaterialData;
-
-import com.doctorzee.fortuneblocks.FortuneBlocks;
 import com.doctorzee.fortuneblocks.Permission;
 import com.doctorzee.fortuneblocks.api.commands.CommandArgument;
 import com.doctorzee.fortuneblocks.api.commands.ValidCommand;
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.handlers.BlockHandler;
-import com.doctorzee.fortuneblocks.utils.ItemNames;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 
 public class FortuneBlocksListCommand extends ValidCommand
 {
@@ -24,13 +21,14 @@ public class FortuneBlocksListCommand extends ValidCommand
     @Override
     public void validRun(CommandSender sender, String[] label, List<CommandArgument<?>> arguments)
     {
-        FortuneBlocks.getLangHandler().sendRenderMessage(sender, "header_footer");
+        Lang.HEADER_FOOTER.send(sender);
+
         for (Material material : BlockHandler.getTrackedMaterials())
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "materials.list",
-                    "{material}", ItemNames.lookup(new MaterialData(material)));
+            Lang.MATERIALS_LIST.send(sender, "{material}", material.name());
         }
-        FortuneBlocks.getLangHandler().sendRenderMessage(sender, "header_footer");
+
+        Lang.HEADER_FOOTER.send(sender);
     }
 
 }

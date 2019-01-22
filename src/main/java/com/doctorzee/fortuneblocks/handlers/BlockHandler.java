@@ -13,36 +13,38 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.doctorzee.fortuneblocks.FortuneBlocks;
+import com.doctorzee.fortuneblocks.configuration.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.doctorzee.fortuneblocks.FortuneBlocks;
-
 public class BlockHandler
 {
 
     private static File blockFile;
-    private static ConcurrentHashMap<BlockWrapper, Object> blockWrappers;
+
+    private static Set<BlockWrapper> blockWrappers;
+
     private static BukkitTask fileSaveTask;
 
     private static Set<Material> materials;
 
     /**
      * Mark a block as placed.
-     * 
+     *
      * @param block the block to mark.
      */
     public static void setPlaced(Block block)
     {
-        blockWrappers.put(wrap(block), null);
+        blockWrappers.add(wrap(block));
     }
 
     /**
      * Mark a block as no longer placed by a player.
-     * 
+     *
      * @param block the block to mark.
      */
     public static void clearPlaced(Block block)
@@ -52,6 +54,7 @@ public class BlockHandler
 
     /**
      * @param block the block to check.
+     *
      * @return {@code true} if this block was placed by a player.
      */
     public static boolean wasPlaced(Block block)
@@ -69,7 +72,7 @@ public class BlockHandler
 
     /**
      * @param material the material to update.
-     * @param status {@code true} to add, {@code false} to remove.
+     * @param status   {@code true} to add, {@code false} to remove.
      */
     public static void setTracked(Material material, boolean status)
     {
@@ -81,7 +84,8 @@ public class BlockHandler
         {
             materials.remove(material);
         }
-        FortuneBlocks.getConfigHandler().setStringList("blocks", getTrackedMaterialNames());
+        FortuneBlocks.getInstance().getConfig().set("blocks", getTrackedMaterialNames());
+        FortuneBlocks.getInstance().saveConfig();
     }
 
     /**
@@ -126,39 +130,35 @@ public class BlockHandler
         }
 
         // initialize the set
-        blockWrappers = new ConcurrentHashMap<>();
+        blockWrappers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
         // run on the next tick to ensure the worlds are loaded
-        Bukkit.getScheduler().runTask(FortuneBlocks.getInstance(), new Runnable()
+        Bukkit.getScheduler().runTask(FortuneBlocks.getInstance(), () ->
         {
-            @Override
-            public void run()
+            // open up the buffered reader
+            try (BufferedReader br = new BufferedReader(new FileReader(blockFile)))
             {
-                // open up the buffered reader
-                try (BufferedReader br = new BufferedReader(new FileReader(blockFile)))
+                String line;
+                while ((line = br.readLine()) != null)
                 {
-                    String line;
-                    while ((line = br.readLine()) != null)
-                    {
-                        blockWrappers.put(new BlockWrapper(line), null);
-                    }
+                    blockWrappers.add(new BlockWrapper(line));
                 }
-                // if something fails, let the console know
-                catch (Exception ex)
-                {
-                    FortuneBlocks.getInstance().getLogger().severe("An error occured loading the placed blocks.");
-                    FortuneBlocks.getInstance().getLogger().severe("Don't manually edit the block file next time.");
+            }
+            // if something fails, let the console know
+            catch (Exception ex)
+            {
+                FortuneBlocks.getInstance().getLogger().severe("An error occurred loading the placed blocks.");
+                FortuneBlocks.getInstance().getLogger().severe("Don't manually edit the block file next time.");
 
-                    // we have to have a file, so delete the corrupted one and create a new one
-                    try
-                    {
-                        blockFile.delete();
-                        blockFile.createNewFile();
-                    }
-                    catch (IOException ex2)
-                    {
-                        ex2.printStackTrace();
-                    }
+                // we have to have a file, so delete the corrupted one and create a new one
+                try
+                {
+                    blockFile.delete();
+                    blockFile.createNewFile();
+                }
+                catch (IOException ex2)
+                {
+                    ex2.printStackTrace();
                 }
             }
         });
@@ -169,54 +169,65 @@ public class BlockHandler
             fileSaveTask.cancel();
         }
 
+        Runnable fileRunnable = () ->
+        {
+            if (blockFile.delete())
+            {
+                try
+                {
+                    blockFile.createNewFile();
+                    FileWriter fw = new FileWriter(blockFile);
+                    for (BlockWrapper blockWrapper : blockWrappers)
+                    {
+                        fw.append(String.valueOf(blockWrapper.getX())).append(",").append(String.valueOf(blockWrapper.getY())).append(",").append(String.valueOf(blockWrapper.getZ())).append(",").append(blockWrapper.getWorld().getName());
+                    }
+                    fw.flush();
+                    fw.close();
+                }
+                catch (IOException ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+            else
+            {
+                FortuneBlocks.getInstance().getLogger().severe("Could not delete the block file.");
+            }
+        };
+
         // save it periodically
         fileSaveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(FortuneBlocks.getInstance(),
-                new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        blockFile.delete();
-                        try
-                        {
-                            blockFile.createNewFile();
-                            FileWriter fw = new FileWriter(blockFile);
-                            for (BlockWrapper blockWrapper : blockWrappers.keySet())
-                            {
-                                fw.append(blockWrapper.getX() + "," + blockWrapper.getY() + "," + blockWrapper.getZ() + "," + blockWrapper.getWorld().getName());
-                            }
-                            fw.flush();
-                            fw.close();
-                        }
-                        catch (IOException ex)
-                        {
-                            ex.printStackTrace();
-                        }
-                    }
-                }, FortuneBlocks.getConfigHandler().getInteger("tracking.save_rate"), FortuneBlocks.getConfigHandler().getInteger("tracking.save_rate"));
+                                                                        fileRunnable,
+                                                                        Config.TRACKING_SAVE_RATE.intValue(),
+                                                                        Config.TRACKING_SAVE_RATE.intValue());
 
         // create enum set
         materials = EnumSet.noneOf(Material.class);
 
         // load the materials we care about
-        Material mat;
-        for (String string : FortuneBlocks.getConfigHandler().getStringList("blocks"))
+        for (String string : FortuneBlocks.getInstance().getConfig().getStringList("blocks"))
         {
-            mat = FortuneBlocks.getItemHandler().get(string).getType();
-            materials.add(mat);
+            try
+            {
+                materials.add(FortuneBlocks.getItemHandler().get(string).getType());
+            }
+            catch (Exception ex)
+            {
+                FortuneBlocks.getInstance().getLogger().severe("Invalid Block: '" + string + "'.");
+            }
         }
     }
 
     /**
      * Used to wrap block locations without storing the Block objects themselves.
-     * 
+     *
      * @author Michael Ziluck
      */
     public static class BlockWrapper
     {
-        private int x;
-        private int y;
-        private int z;
+        private int   x;
+        private int   y;
+        private int   z;
         private World world;
 
         public BlockWrapper(int x, int y, int z, World world)
@@ -261,7 +272,7 @@ public class BlockHandler
         }
 
         /**
-         * @param x the x to set
+         * @param y the y to set
          */
         public void setY(int y)
         {
