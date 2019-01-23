@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import com.doctorzee.fortuneblocks.FortuneBlocks;
 import com.doctorzee.fortuneblocks.Permission;
 import com.doctorzee.fortuneblocks.configuration.Config;
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.handlers.BlockHandler;
 import com.doctorzee.fortuneblocks.utils.VersionUtils;
 import org.bukkit.GameMode;
@@ -110,7 +110,7 @@ public class BlockListener implements Listener
                     if (fullMessageCooldown.containsKey(event.getPlayer().getName()))
                     {
                         // get how often they should be message
-                        int cooldownTime = FortuneBlocks.getConfigHandler().getInteger("full.message.cooldown");
+                        int cooldownTime = Config.FULL_MESSAGE_COOLDOWN.intValue();
 
                         // set how many seconds are left
                         long secondsLeft = ((fullMessageCooldown.get(event.getPlayer().getName()) / 1000) + cooldownTime) - (System.currentTimeMillis() / 1000);
@@ -126,12 +126,12 @@ public class BlockListener implements Listener
                     if (message)
                     {
                         fullMessageCooldown.put(event.getPlayer().getName(), System.currentTimeMillis());
-                        FortuneBlocks.getLangHandler().sendRenderMessage(event.getPlayer(), "inventory_full");
+                        Lang.INVENTORY_FULL.send(event.getPlayer());
                     }
                 }
 
                 // if the blocks should drop when their inventory is full, do it
-                if (FortuneBlocks.getConfigHandler().getBoolean("full.drop"))
+                if (Config.FULL_DROP.booleanValue())
                 {
                     for (ItemStack drop : drops)
                     {

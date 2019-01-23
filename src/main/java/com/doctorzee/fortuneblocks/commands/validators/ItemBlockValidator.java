@@ -1,10 +1,9 @@
 package com.doctorzee.fortuneblocks.commands.validators;
 
+import com.doctorzee.fortuneblocks.api.commands.Validator;
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-
-import com.doctorzee.fortuneblocks.FortuneBlocks;
-import com.doctorzee.fortuneblocks.api.commands.Validator;
 
 public class ItemBlockValidator implements Validator<Material>
 {
@@ -14,7 +13,7 @@ public class ItemBlockValidator implements Validator<Material>
     {
         if (!arg.isBlock())
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "materials.not_block");
+            Lang.MATERIALS_NOT_BLOCK.send(sender);
             return false;
         }
         return true;

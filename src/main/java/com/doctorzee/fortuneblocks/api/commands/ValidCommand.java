@@ -7,17 +7,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-
-import com.doctorzee.fortuneblocks.FortuneBlocks;
 import com.doctorzee.fortuneblocks.Permission;
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.utils.CollectionUtils;
 import com.doctorzee.fortuneblocks.utils.StringUtils;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 public abstract class ValidCommand
 {
@@ -41,12 +40,12 @@ public abstract class ValidCommand
     /**
      * Constructs a new command with the given arguments. This will initialize the arguments list as well as the values
      * table. Additionally, it will automatically convert all aliases to lowercase.
-     * 
-     * @param name the name of the command.
-     * @param description the description of the command.
-     * @param permission the required permission for the command.
+     *
+     * @param name          the name of the command.
+     * @param description   the description of the command.
+     * @param permission    the required permission for the command.
      * @param blocksConsole if this command is unusable by the console.
-     * @param aliases the aliases of the command.
+     * @param aliases       the aliases of the command.
      */
     public ValidCommand(String name, String description, Permission permission, boolean blocksConsole, String[] aliases)
     {
@@ -66,11 +65,12 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command without any aliases.
-     * 
-     * @param name the name of the command.
-     * @param description the description of the command.
-     * @param permission the required permission for the command.
+     *
+     * @param name          the name of the command.
+     * @param description   the description of the command.
+     * @param permission    the required permission for the command.
      * @param blocksConsole if this command is unusable by the console.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, Permission permission, boolean blocksConsole)
@@ -80,11 +80,12 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command that is usable by the console.
-     * 
-     * @param name the name of the command.
+     *
+     * @param name        the name of the command.
      * @param description the description of the command.
-     * @param permission the required permission for the command.
-     * @param aliases the aliases of the command.
+     * @param permission  the required permission for the command.
+     * @param aliases     the aliases of the command.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, Permission permission, String[] aliases)
@@ -94,11 +95,12 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command without a required permission.
-     * 
-     * @param name the name of the command.
-     * @param description the description of the command.
+     *
+     * @param name          the name of the command.
+     * @param description   the description of the command.
      * @param blocksConsole if this command is unusable by the console.
-     * @param aliases the aliases of the command.
+     * @param aliases       the aliases of the command.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, boolean blocksConsole, String[] aliases)
@@ -108,10 +110,11 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command without any aliases and is usable by the console.
-     * 
-     * @param name the name of the command.
+     *
+     * @param name        the name of the command.
      * @param description the description of the command.
-     * @param permission the required permission for the command.
+     * @param permission  the required permission for the command.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, Permission permission)
@@ -121,10 +124,11 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command without any aliases and no required permission.
-     * 
-     * @param name the name of the command.
-     * @param description the description of the command.
+     *
+     * @param name          the name of the command.
+     * @param description   the description of the command.
      * @param blocksConsole if this command is unusable by the console.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, boolean blocksConsole)
@@ -134,10 +138,11 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command with no required permission and is usable by the console.
-     * 
-     * @param name the name of the command.
+     *
+     * @param name        the name of the command.
      * @param description the description of the command.
-     * @param aliases the aliases of the command.
+     * @param aliases     the aliases of the command.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description, String[] aliases)
@@ -147,9 +152,10 @@ public abstract class ValidCommand
 
     /**
      * Constructs a new command without any aliases, no required permission, and is usable by the console.
-     * 
-     * @param name the name of the command.
+     *
+     * @param name        the name of the command.
      * @param description the description of the command.
+     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
     public ValidCommand(String name, String description)
@@ -161,16 +167,16 @@ public abstract class ValidCommand
      * This method runs the command. It goes through each argument and will process and validate it. Then, so long as
      * that passes, it will run the command's system. Last it will clear out any saved table data and stored argument
      * values.
-     * 
-     * @param sender the sender of the command.
-     * @param label the label from which the command was sent
+     *
+     * @param sender       the sender of the command.
+     * @param label        the label from which the command was sent
      * @param rawArguments the unparsed and non-validated arguments.
      */
     protected void process(CommandSender sender, String[] label, String[] rawArguments)
     {
         if (rawArguments.length < getMinimumLength() || rawArguments.length > getMaximumLength())
         {
-            FortuneBlocks.getLangHandler().sendUsageMessage(sender, StringUtils.compile(label), (Object[]) getArgumentNames());
+            Lang.sendUsageMessage(sender, label, getArgumentNames());
             return;
         }
         for (SenderValidator senderValidator : senderValidators)
@@ -183,7 +189,7 @@ public abstract class ValidCommand
 
         if (rawArguments.length == 0 && blocksConsole() && sender instanceof ConsoleCommandSender)
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "only_players");
+            Lang.ONLY_PLAYERS.send(sender);
             return;
         }
 
@@ -195,13 +201,13 @@ public abstract class ValidCommand
             // this should never happen, it is here exclusively to prevent potential errors that were not caught with exceptions earlier
             if (argument == null)
             {
-                FortuneBlocks.getLangHandler().sendUsageMessage(sender, StringUtils.compile(label), (Object[]) getArgumentNames());
+                Lang.sendUsageMessage(sender, label, getArgumentNames());
                 return;
             }
 
             if (blocksConsole() && !argument.allowsConsole() && sender instanceof ConsoleCommandSender)
             {
-                FortuneBlocks.getLangHandler().sendRenderMessage(sender, "only_players");
+                Lang.ONLY_PLAYERS.send(sender);
                 return;
             }
 
@@ -217,16 +223,16 @@ public abstract class ValidCommand
         catch (Exception ex)
         {
             ex.printStackTrace();
-            sender.sendMessage("§4An error occured. Contact a staff member immediately.");
-            for(Player player : Bukkit.getOnlinePlayers())
+            sender.sendMessage("§4An error occurred. Contact a staff member immediately.");
+            for (Player player : Bukkit.getOnlinePlayers())
             {
                 if (player.hasPermission("fortuneblocks.error"))
                 {
-                    
+                    // TODO send error message
                 }
             }
         }
-        arguments.forEach(arg -> arg.clearValue());
+        arguments.forEach(CommandArgument::clearValue);
         clearTable();
     }
 
@@ -234,9 +240,10 @@ public abstract class ValidCommand
      * Process the tab complete for the given command. This also takes into account the fact the last argument provided
      * is what is supposed to be changed. The arguments passed include only the arguments for the command, and not the
      * actual label used. The raw arguments passed should always have at least a length of 1.
-     * 
-     * @param sender the person who sent the tab request.
+     *
+     * @param sender       the person who sent the tab request.
      * @param rawArguments the arguments already typed by the player.
+     *
      * @return the suggestions for tab complete.
      */
     public List<String> processTabComplete(CommandSender sender, String[] rawArguments)
@@ -270,9 +277,9 @@ public abstract class ValidCommand
      * Runs the command after all processing has already been completed. The label is an array of the label used by this
      * command as well as any parent command. The arguments will always be there, whether they are used or not. To check
      * if optional arguments were used, call the method {@link CommandArgument#hasValue()}.
-     * 
-     * @param sender the sender of the command.
-     * @param label the label of the command.
+     *
+     * @param sender    the sender of the command.
+     * @param label     the label of the command.
      * @param arguments the arguments of the command.
      */
     public abstract void validRun(CommandSender sender, String[] label, List<CommandArgument<?>> arguments);
@@ -280,7 +287,7 @@ public abstract class ValidCommand
     /**
      * The table of the already processed values. -1 corresponds to the sender. Every other number corresponds to the
      * ordinal of the argument. In the process of running the command, it will always grab the sender's session.
-     * 
+     *
      * @return the already processed values.
      */
     public Table<Integer, Class<?>, Object> getValues()
@@ -314,7 +321,7 @@ public abstract class ValidCommand
     /**
      * The lowest possible length that the number of raw arguments is capable of being. This is the count of the number
      * of arguments that are not optional.
-     * 
+     *
      * @return the minimum length of the raw command arguments.
      */
     protected int getMinimumLength()
@@ -333,7 +340,7 @@ public abstract class ValidCommand
     /**
      * The highest possible length that the number of raw arguments is capable of being. For non-variable-length
      * commands, this is the size of all the arguments. For variable-length commands, it is {@link Integer#MAX_VALUE}.
-     * 
+     *
      * @return the maximum length of the raw command arguments.
      */
     protected int getMaximumLength()
@@ -354,7 +361,7 @@ public abstract class ValidCommand
      * cases. First, if the given argument is required and the previous argument is not optional. Second, if the
      * argument before it is of variable length. Both of these cases are not supported as there is no perfect way to
      * ensure that the arguments will always capture the desired input.
-     * 
+     *
      * @param argument the new argument
      */
     protected void addArgument(CommandArgument<?> argument)
@@ -378,8 +385,9 @@ public abstract class ValidCommand
 
     /**
      * Remove an existing argument from the command.
-     * 
+     *
      * @param argument the existing argument.
+     *
      * @return whether or not the argument still existed.
      */
     protected boolean removeArgument(CommandArgument<?> argument)
@@ -389,8 +397,9 @@ public abstract class ValidCommand
 
     /**
      * Remove an existing argument from the command, referenced by name.
-     * 
+     *
      * @param argumentName the name of the argument.
+     *
      * @return whether or not the argument existed.
      */
     protected boolean removeArgument(String argumentName)
@@ -402,7 +411,7 @@ public abstract class ValidCommand
      * Return an unmodifiable view of the arguments for this command. To add a new argument use
      * {@link #addArgument(CommandArgument)}. To remove an existing argument use
      * {@link #removeArgument(CommandArgument)}.
-     * 
+     *
      * @return the current existing arguments.
      */
     public List<CommandArgument<?>> getArguments()
@@ -412,6 +421,7 @@ public abstract class ValidCommand
 
     /**
      * @param ordinal the ordinal.
+     *
      * @return the argument at the given ordinal.
      */
     protected CommandArgument<?> getArgument(int ordinal)
@@ -429,8 +439,9 @@ public abstract class ValidCommand
     /**
      * Get a particular argument that has the given name. This will return null if the argument is not found. Not case
      * sensitive.
-     * 
+     *
      * @param argumentName the name of the argument.
+     *
      * @return the argument with the given name.
      */
     protected CommandArgument<?> getArgument(String argumentName)
@@ -448,7 +459,7 @@ public abstract class ValidCommand
 
     /**
      * Adds a validator to be run on the player before the command itself starts processing the information.
-     * 
+     *
      * @param senderValidator the new validator
      */
     protected void addSenderValidator(SenderValidator senderValidator)
@@ -458,8 +469,9 @@ public abstract class ValidCommand
 
     /**
      * Checks whether the passed in command string matches this particular valid command,
-     * 
+     *
      * @param label the label of the command.
+     *
      * @return {@code true} if the parameter matches the command. Otherwise, returns {@code false}.
      */
     protected boolean matches(String label)
@@ -485,6 +497,7 @@ public abstract class ValidCommand
 
     /**
      * @param start the start of the alias to search for.
+     *
      * @return the name or alias that starts with the given string.
      */
     protected String getMatchingAlias(String start)
@@ -524,7 +537,7 @@ public abstract class ValidCommand
     {
         return permission != null;
     }
-    
+
     /**
      * @return the permission required to run this command.
      */
@@ -537,7 +550,7 @@ public abstract class ValidCommand
      * Returns the description of the command. This is given to Bukkit when the command is properly registered within
      * their system. There is no method to change this, and if it is changed via reflection, that change will not be
      * reflected within Bukkit's command system.
-     * 
+     *
      * @return the description of the command.
      */
     public String getDescription()
@@ -549,7 +562,7 @@ public abstract class ValidCommand
      * Returns the name of the command. This is what is used to register the command within Bukkit, as well as the
      * primary way to reference the command elsewhere. There is no method to change this, and if it is changed via
      * reflection, that change will not be reflected within Bukkit's command system.
-     * 
+     *
      * @return the name of the command.
      */
     public String getName()

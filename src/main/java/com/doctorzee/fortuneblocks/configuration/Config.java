@@ -40,6 +40,16 @@ public final class Config
      */
     public static final MutableBoolean FULL_MESSAGE_USE = new MutableBoolean(true);
 
+    /**
+     * The delay between messages related to having a full inventory. This is measured in seconds.
+     */
+    public static final MutableInt FULL_MESSAGE_COOLDOWN = new MutableInt(5);
+
+    /**
+     * Whether or not items should be dropped when the player has a full inventory.
+     */
+    public static final MutableBoolean FULL_DROP = new MutableBoolean(true);
+
     public static void update()
     {
         FileConfiguration config = FortuneBlocks.getInstance().getConfig();

@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.doctorzee.fortuneblocks.FortuneBlocks;
 import com.doctorzee.fortuneblocks.utils.CollectionUtils;
+import com.doctorzee.fortuneblocks.utils.StringUtils;
 import org.apache.commons.lang.mutable.MutableBoolean;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +18,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public enum Lang
 {
-
     /**
      * The prefix before most of the lang messages.
      */
@@ -54,6 +54,10 @@ public enum Lang
      * The header and footer for all commands.
      */
     HEADER_FOOTER("header_footer:", "&7&m-----------------------------------"),
+    /**
+     * When the console tries to run a player-only command.
+     */
+    ONLY_PLAYERS("only_players", "Only players can run that command."),
     /**
      * When a new material is tracked.
      */
@@ -203,5 +207,15 @@ public enum Lang
     private static void error(String location)
     {
         FortuneBlocks.getInstance().getLogger().severe("Error loading the lang value '" + location + "'. Reverted it to default.");
+    }
+
+    public static void sendUsageMessage(CommandSender sender, String[] label, String[] parameters)
+    {
+        StringBuilder args = new StringBuilder("/" + StringUtils.compile(label));
+        for (String str : parameters)
+        {
+            args.append(" [").append(str).append("]");
+        }
+        USAGE.send(sender, "{usage}", args.toString());
     }
 }

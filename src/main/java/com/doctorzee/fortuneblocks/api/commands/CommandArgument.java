@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.command.CommandSender;
 
 import com.doctorzee.fortuneblocks.FortuneBlocks;
@@ -63,7 +64,7 @@ public class CommandArgument<T>
     {
         if (hasPermission() && !sender.hasPermission(permission.getPermission()))
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "no_permissions");
+            Lang.NO_PERMS.send(sender);
             return false;
         }
 

@@ -9,6 +9,7 @@ no_sub_access: 'You don''t have access to any sub-commands.'
 inventory_full: 'Your inventory is full.'
 reload: 'Reloaded the config and lang files.'
 header_footer: '&7&m----------------------------------------------------'
+only_players: 'Only players can run that command.'
 materials:
   add: 'The material &b{material}&f now has fortune.'
   remove: 'The material &b{material}&f no longer has fortune.'

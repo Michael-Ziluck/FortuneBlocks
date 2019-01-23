@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.command.CommandSender;
 
 import com.doctorzee.fortuneblocks.FortuneBlocks;
@@ -82,7 +83,7 @@ public abstract class ValidBaseCommand extends ValidCommand
             }
             else
             {
-                FortuneBlocks.getLangHandler().sendRenderMessage(sender, "no_permissions");
+                Lang.NO_PERMS.send(sender);
             }
         }
     }
@@ -183,16 +184,16 @@ public abstract class ValidBaseCommand extends ValidCommand
 
         if (allowedSubs.size() == 0)
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "no_sub_access");
+            Lang.NO_SUBS.send(sender);
             return;
         }
 
-        FortuneBlocks.getLangHandler().sendRenderMessage(sender, "header_footer");
+        Lang.HEADER_FOOTER.send(sender);
         for (ValidCommand sub : allowedSubs)
         {
             sender.sendMessage(" §b/" + StringUtils.compile(label) + " " + sub.getName() + ": §7" + sub.getDescription());
         }
-        FortuneBlocks.getLangHandler().sendRenderMessage(sender, "header_footer");
+        Lang.HEADER_FOOTER.send(sender);
     }
 
     @Override

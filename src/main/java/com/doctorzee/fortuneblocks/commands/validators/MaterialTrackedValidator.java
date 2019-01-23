@@ -1,11 +1,10 @@
 package com.doctorzee.fortuneblocks.commands.validators;
 
+import com.doctorzee.fortuneblocks.api.commands.Validator;
+import com.doctorzee.fortuneblocks.configuration.Lang;
+import com.doctorzee.fortuneblocks.handlers.BlockHandler;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-
-import com.doctorzee.fortuneblocks.FortuneBlocks;
-import com.doctorzee.fortuneblocks.api.commands.Validator;
-import com.doctorzee.fortuneblocks.handlers.BlockHandler;
 
 public class MaterialTrackedValidator implements Validator<Material>
 {
@@ -15,7 +14,7 @@ public class MaterialTrackedValidator implements Validator<Material>
     {
         if (!BlockHandler.isTracked(arg))
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "materials.not_tracked");
+            Lang.MATERIALS_NOT_TRACKED.send(sender);
             return false;
         }
 
