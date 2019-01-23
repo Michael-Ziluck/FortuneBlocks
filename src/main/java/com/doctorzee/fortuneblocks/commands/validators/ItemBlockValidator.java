@@ -13,7 +13,7 @@ public class ItemBlockValidator implements Validator<Material>
     {
         if (!arg.isBlock())
         {
-            Lang.MATERIALS_NOT_BLOCK.send(sender);
+            Lang.MATERIALS_NOT_BLOCK.sendError(sender);
             return false;
         }
         return true;

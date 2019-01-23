@@ -36,7 +36,7 @@ public class FortuneBlocksAddCommand extends ValidCommand
 
         BlockHandler.setTracked(material, true);
 
-        Lang.MATERIALS_ADD.send(sender, "{material}", material.name());
+        Lang.MATERIALS_ADD.sendSuccess(sender, "{material}", material.name());
     }
 
 }

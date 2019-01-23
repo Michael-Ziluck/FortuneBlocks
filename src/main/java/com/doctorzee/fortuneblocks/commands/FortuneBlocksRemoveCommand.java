@@ -34,7 +34,7 @@ public class FortuneBlocksRemoveCommand extends ValidCommand
 
         BlockHandler.setTracked(material, false);
 
-        Lang.MATERIALS_REMOVE.send(sender, "{material}", material.name());
+        Lang.MATERIALS_REMOVE.sendSuccess(sender, "{material}", material.name());
     }
 
 }

@@ -14,7 +14,7 @@ public class MaterialTrackedValidator implements Validator<Material>
     {
         if (!BlockHandler.isTracked(arg))
         {
-            Lang.MATERIALS_NOT_TRACKED.send(sender);
+            Lang.MATERIALS_NOT_TRACKED.sendError(sender);
             return false;
         }
 

@@ -6,10 +6,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +28,7 @@ import com.doctorzee.fortuneblocks.FortuneBlocks;
 
 /**
  * The processor that handles all {@link ValidCommand ValidCommands}.
- * 
+ *
  * @author Michael Ziluck
  */
 public class CommandHandler implements CommandExecutor, TabCompleter
@@ -56,12 +58,12 @@ public class CommandHandler implements CommandExecutor, TabCompleter
         {
             if (sender.hasPermission(command.getPermission().getPermission()))
             {
-                command.process(sender, new String[] { label }, args);
+                command.process(sender, new String[]{ label }, args);
             }
             else
             {
                 // The following classes also have this check: ...
-                FortuneBlocks.getLangHandler().sendRenderMessage(sender, "no_permissions");
+                Lang.NO_PERMS.sendError(sender);
             }
         }
         else
@@ -80,13 +82,14 @@ public class CommandHandler implements CommandExecutor, TabCompleter
             return command.processTabComplete(sender, args);
         }
 
-        return Arrays.asList();
+        return Collections.emptyList();
     }
 
     /**
      * Registers a new command owned by {@link FortuneBlocks}.
-     * 
+     *
      * @param command the command to register.
+     *
      * @see #registerCommand(ValidCommand, JavaPlugin)
      */
     public void registerCommand(ValidCommand command)
@@ -96,9 +99,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter
 
     /**
      * Registers the command to be used with this command handler.
-     * 
+     *
      * @param command the command to register.
-     * @param plugin the plugin this command is owned by.
+     * @param plugin  the plugin this command is owned by.
      */
     public void registerCommand(ValidCommand command, JavaPlugin plugin)
     {
@@ -124,8 +127,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter
     /**
      * Gets the custom command of the given name. This can be either the command's name or one of it's aliases. Will
      * return null if no match was found, which should never happen assuming the command registration went properly.
-     * 
+     *
      * @param label the label of the command.
+     *
      * @return the command, if one exists.
      */
     public ValidCommand getCommand(String label)
@@ -159,9 +163,10 @@ public class CommandHandler implements CommandExecutor, TabCompleter
     /**
      * Gets all list of all commands that have a name that conflicts with the given valid command. This ensures that the
      * commands registered in our system will always supersede any other plugin's commands.
-     * 
+     *
      * @param strings the names of all existing commands.
      * @param command the command to check.
+     *
      * @return all conflicting preexisting commands.
      */
     private List<String> checkString(Collection<String> strings, ValidCommand command)
@@ -232,8 +237,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter
     }
 
     /**
-     * @param sender the sender of the tab complete.
+     * @param sender   the sender of the tab complete.
      * @param argument the beginning of the typed argument.
+     *
      * @return the name of all players visible to the sender.
      */
     public static List<String> defaultTabComplete(CommandSender sender, String lastWord)

@@ -1,5 +1,6 @@
 package com.doctorzee.fortuneblocks.commands.validators;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
@@ -15,7 +16,7 @@ public class MaterialNotTrackedValidator implements Validator<Material>
     {
         if (BlockHandler.isTracked(arg))
         {
-            FortuneBlocks.getLangHandler().sendRenderMessage(sender, "materials.tracked");
+            Lang.MATERIALS_TRACKED.sendError(sender);
             return false;
         }
 

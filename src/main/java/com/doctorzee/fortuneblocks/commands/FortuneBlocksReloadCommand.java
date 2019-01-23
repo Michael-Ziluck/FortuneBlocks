@@ -2,6 +2,7 @@ package com.doctorzee.fortuneblocks.commands;
 
 import java.util.List;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.command.CommandSender;
 
 import com.doctorzee.fortuneblocks.FortuneBlocks;
@@ -21,7 +22,7 @@ public class FortuneBlocksReloadCommand extends ValidCommand
     public void validRun(CommandSender sender, String[] label, List<CommandArgument<?>> arguments)
     {
         FortuneBlocks.reloadConfiguration();
-        FortuneBlocks.getLangHandler().sendRenderMessage(sender, "reload");
+        Lang.RELOAD.sendSuccess(sender);
     }
 
 }

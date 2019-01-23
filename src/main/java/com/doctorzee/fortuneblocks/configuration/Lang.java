@@ -21,7 +21,7 @@ public enum Lang
     /**
      * The prefix before most of the lang messages.
      */
-    PREFIX("prefix.text", "§3[§bFortuneBlocks§3]"),
+    PREFIX("prefix.text", "§3[§bFortuneBlocks§3] §f{message}"),
     /**
      * When a player misuses a command.
      */
@@ -136,6 +136,48 @@ public enum Lang
     public void send(CommandSender sender, Object... parameters)
     {
         sender.sendMessage(getMessage(parameters));
+    }
+
+    /**
+     * Sends this Lang object but prepended with the ERROR value as well.
+     *
+     * @param sender     the CommandSender receiving the message.
+     * @param parameters all additional arguments to fill placeholders.
+     */
+    public void sendError(CommandSender sender, Object... parameters)
+    {
+        for (String line : getMessage(parameters))
+        {
+            ERROR.send(sender, "{message}", line);
+        }
+    }
+
+    /**
+     * Sends this Lang object but prepended with the SUCCESS value as well.
+     *
+     * @param sender     the CommandSender receiving the message.
+     * @param parameters all additional arguments to fill placeholders.
+     */
+    public void sendSuccess(CommandSender sender, Object... parameters)
+    {
+        for (String line : getMessage(parameters))
+        {
+            SUCCESS.send(sender, "{message}", line);
+        }
+    }
+
+    /**
+     * Sends this Lang object but prepended with the PREFIX value as well.
+     *
+     * @param sender     the CommandSender receiving the message.
+     * @param parameters all additional arguments to fill placeholders.
+     */
+    public void sendInfo(CommandSender sender, Object... parameters)
+    {
+        for (String line : getMessage(parameters))
+        {
+            PREFIX.send(sender, "{message}", line);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 prefix:
   use: false
-  text: '&3[&bFortuneBlocks&3]'
+  text: '&3[&bFortuneBlocks&3] &f{message}'
 usage_message: '`&6&lUSAGE &e» &f{message}'
 error_message: '&4lERROR &c» &7{message}'
 success_message: '&2&lSUCCESS &a» &f{message}'

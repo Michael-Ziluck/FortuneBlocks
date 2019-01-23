@@ -189,7 +189,7 @@ public abstract class ValidCommand
 
         if (rawArguments.length == 0 && blocksConsole() && sender instanceof ConsoleCommandSender)
         {
-            Lang.ONLY_PLAYERS.send(sender);
+            Lang.ONLY_PLAYERS.sendError(sender);
             return;
         }
 
@@ -207,7 +207,7 @@ public abstract class ValidCommand
 
             if (blocksConsole() && !argument.allowsConsole() && sender instanceof ConsoleCommandSender)
             {
-                Lang.ONLY_PLAYERS.send(sender);
+                Lang.ONLY_PLAYERS.sendError(sender);
                 return;
             }
 
@@ -226,9 +226,9 @@ public abstract class ValidCommand
             sender.sendMessage("§4An error occurred. Contact a staff member immediately.");
             for (Player player : Bukkit.getOnlinePlayers())
             {
-                if (player.hasPermission("fortuneblocks.error"))
+                if (player.hasPermission(Permission.ERROR.getPermission()))
                 {
-                    // TODO send error message
+                    player.sendMessage("§4§lERROR: §cA player tried to run a FortuneBlocks command and it caused an error. Tell an administrator to check the console.");
                 }
             }
         }

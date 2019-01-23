@@ -64,7 +64,7 @@ public class CommandArgument<T>
     {
         if (hasPermission() && !sender.hasPermission(permission.getPermission()))
         {
-            Lang.NO_PERMS.send(sender);
+            Lang.NO_PERMS.sendError(sender);
             return false;
         }
 

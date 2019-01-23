@@ -3,6 +3,7 @@ package com.doctorzee.fortuneblocks.commands.parsers;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.doctorzee.fortuneblocks.configuration.Lang;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -16,11 +17,14 @@ public class MaterialParser implements Parser<Material>
     @Override
     public Material parseArgument(CommandSender sender, String[] label, String rawArgument)
     {
-        ItemStack is = FortuneBlocks.getItemHandler().get(rawArgument);
-
-        if (is == null)
+        ItemStack is;
+        try
         {
-            sender.sendMessage(FortuneBlocks.getLangHandler().getString("materials.invalid_item"));
+            is = FortuneBlocks.getItemHandler().get(rawArgument);
+        }
+        catch (Exception ex)
+        {
+            Lang.MATERIALS_INVALID_ITEM.sendError(sender);
             return null;
         }
 

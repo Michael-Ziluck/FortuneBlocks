@@ -83,7 +83,7 @@ public abstract class ValidBaseCommand extends ValidCommand
             }
             else
             {
-                Lang.NO_PERMS.send(sender);
+                Lang.NO_PERMS.sendError(sender);
             }
         }
     }
@@ -184,7 +184,7 @@ public abstract class ValidBaseCommand extends ValidCommand
 
         if (allowedSubs.size() == 0)
         {
-            Lang.NO_SUBS.send(sender);
+            Lang.NO_SUBS.sendError(sender);
             return;
         }
 

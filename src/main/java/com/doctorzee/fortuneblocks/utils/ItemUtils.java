@@ -15,8 +15,10 @@ public class ItemUtils
 
     /**
      * Checks if the given material is a potion.
+     *
      * @param material the material to check.
-     * @return
+     *
+     * @return @{code true} if the material is a potion. Otherwise returns @{code false}.
      */
     public static boolean isPotion(Material material)
     {
