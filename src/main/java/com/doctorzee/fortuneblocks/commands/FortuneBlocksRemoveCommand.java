@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 
 public class FortuneBlocksRemoveCommand extends ValidCommand
 {
-
     public FortuneBlocksRemoveCommand()
     {
         super("remove", "Remove a material from being tracked.", Permission.ADMIN_REMOVE, new String[]{ "delete", "untrack" });
@@ -37,5 +36,4 @@ public class FortuneBlocksRemoveCommand extends ValidCommand
 
         Lang.MATERIALS_REMOVE.sendSuccess(sender, "{material}", ItemNames.lookup(material));
     }
-
 }

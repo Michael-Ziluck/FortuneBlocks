@@ -5,7 +5,6 @@ import com.doctorzee.fortuneblocks.api.commands.ValidBaseCommand;
 
 public class FortuneBlocksCommand extends ValidBaseCommand
 {
-
     public FortuneBlocksCommand()
     {
         super("fortuneblocks", "Manage fortune blocks.", Permission.ADMIN, new String[]{ "fb", "fortuneblock", "fblock" });
@@ -15,5 +14,4 @@ public class FortuneBlocksCommand extends ValidBaseCommand
         addSubCommand(new FortuneBlocksListCommand());
         addSubCommand(new FortuneBlocksReloadCommand());
     }
-
 }

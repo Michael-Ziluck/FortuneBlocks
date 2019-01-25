@@ -17,7 +17,6 @@ import org.bukkit.command.CommandSender;
 
 public class FortuneBlocksAddCommand extends ValidCommand
 {
-
     public FortuneBlocksAddCommand()
     {
         super("add", "Add a material to be tracked.", Permission.ADMIN_ADD, new String[]{ "track" });
@@ -39,5 +38,4 @@ public class FortuneBlocksAddCommand extends ValidCommand
 
         Lang.MATERIALS_ADD.sendSuccess(sender, "{material}", ItemNames.lookup(material));
     }
-
 }

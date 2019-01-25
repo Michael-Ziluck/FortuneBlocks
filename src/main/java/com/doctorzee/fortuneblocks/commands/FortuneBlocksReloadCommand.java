@@ -12,7 +12,6 @@ import com.doctorzee.fortuneblocks.api.commands.ValidCommand;
 
 public class FortuneBlocksReloadCommand extends ValidCommand
 {
-
     public FortuneBlocksReloadCommand()
     {
         super("reload", "Reload the config and lang files.", Permission.ADMIN_RELOAD);
@@ -24,5 +23,4 @@ public class FortuneBlocksReloadCommand extends ValidCommand
         FortuneBlocks.reloadConfiguration();
         Lang.RELOAD.sendSuccess(sender);
     }
-
 }

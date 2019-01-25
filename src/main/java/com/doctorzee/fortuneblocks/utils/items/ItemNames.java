@@ -25,7 +25,6 @@ import org.bukkit.material.MaterialData;
  */
 public class ItemNames
 {
-
     private static Map<Material, String> ITEM_NAMES;
 
     static

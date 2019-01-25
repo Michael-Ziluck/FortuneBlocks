@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 
 public class FortuneBlocksListCommand extends ValidCommand
 {
-
     public FortuneBlocksListCommand()
     {
         super("list", "List off all tracked materials.", Permission.ADMIN_LIST);
@@ -31,5 +30,4 @@ public class FortuneBlocksListCommand extends ValidCommand
 
         Lang.HEADER_FOOTER.send(sender);
     }
-
 }
