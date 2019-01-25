@@ -7,6 +7,7 @@ import com.doctorzee.fortuneblocks.FortuneBlocks;
 import com.doctorzee.fortuneblocks.utils.CollectionUtils;
 import com.doctorzee.fortuneblocks.utils.StringUtils;
 import org.apache.commons.lang.mutable.MutableBoolean;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -53,7 +54,7 @@ public enum Lang
     /**
      * The header and footer for all commands.
      */
-    HEADER_FOOTER("header_footer:", "&7&m-----------------------------------"),
+    HEADER_FOOTER("header_footer", "&7&m-----------------------------------"),
     /**
      * When the console tries to run a player-only command.
      */
@@ -61,11 +62,11 @@ public enum Lang
     /**
      * When a new material is tracked.
      */
-    MATERIALS_ADD("materials.add", "The material §b{material}§f is now affected by fortune."),
+    MATERIALS_ADD("materials.add", "The material &b{material}&f is now affected by fortune."),
     /**
      * When a material is untracked.
      */
-    MATERIALS_REMOVE("materials.remove", "The material §b{material}§f no longer is affected by fortune."),
+    MATERIALS_REMOVE("materials.remove", "The material &b{material}&f no longer is affected by fortune."),
     /**
      * When a user tries to track an already tracked material.
      */
@@ -85,7 +86,7 @@ public enum Lang
     /**
      * When the user lists off the tracked materials.
      */
-    MATERIALS_LIST("materials.list", "  §6- §e{material}");
+    MATERIALS_LIST("materials.list", "  &6- &e{material}");
 
     private String[] message;
 
@@ -217,7 +218,7 @@ public enum Lang
             string = string.replace(args[i].toString(), CollectionUtils.firstNonNull(args[i + 1], "").toString());
         }
 
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     public static void update()
@@ -258,6 +259,6 @@ public enum Lang
         {
             args.append(" [").append(str).append("]");
         }
-        USAGE.send(sender, "{usage}", args.toString());
+        USAGE.send(sender, "{message}", args.toString());
     }
 }

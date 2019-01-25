@@ -8,7 +8,7 @@ public class FortuneBlocksCommand extends ValidBaseCommand
 
     public FortuneBlocksCommand()
     {
-        super("fortuneblocks", "Manage fortune blocks.", Permission.ADMIN, new String[] { "fb", "fortuneblock", "fblock" });
+        super("fortuneblocks", "Manage fortune blocks.", Permission.ADMIN, new String[]{ "fb", "fortuneblock", "fblock" });
 
         addSubCommand(new FortuneBlocksAddCommand());
         addSubCommand(new FortuneBlocksRemoveCommand());

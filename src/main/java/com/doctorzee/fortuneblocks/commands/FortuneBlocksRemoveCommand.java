@@ -10,6 +10,7 @@ import com.doctorzee.fortuneblocks.commands.parsers.MaterialParser;
 import com.doctorzee.fortuneblocks.commands.validators.MaterialTrackedValidator;
 import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.handlers.BlockHandler;
+import com.doctorzee.fortuneblocks.utils.items.ItemNames;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
@@ -21,10 +22,10 @@ public class FortuneBlocksRemoveCommand extends ValidCommand
         super("remove", "Remove a material from being tracked.", Permission.ADMIN_REMOVE, new String[]{ "delete", "untrack" });
 
         addArgument(CommandArgumentBuilder.createBuilder(Material.class)
-                                          .setName("material")
-                                          .setParser(new MaterialParser())
-                                          .addValidator(new MaterialTrackedValidator())
-                                          .build());
+                            .setName("material")
+                            .setParser(new MaterialParser())
+                            .addValidator(new MaterialTrackedValidator())
+                            .build());
     }
 
     @Override
@@ -34,7 +35,7 @@ public class FortuneBlocksRemoveCommand extends ValidCommand
 
         BlockHandler.setTracked(material, false);
 
-        Lang.MATERIALS_REMOVE.sendSuccess(sender, "{material}", material.name());
+        Lang.MATERIALS_REMOVE.sendSuccess(sender, "{material}", ItemNames.lookup(material));
     }
 
 }

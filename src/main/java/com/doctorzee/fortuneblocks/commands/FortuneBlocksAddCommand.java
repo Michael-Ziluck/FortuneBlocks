@@ -11,6 +11,7 @@ import com.doctorzee.fortuneblocks.commands.validators.ItemBlockValidator;
 import com.doctorzee.fortuneblocks.commands.validators.MaterialNotTrackedValidator;
 import com.doctorzee.fortuneblocks.configuration.Lang;
 import com.doctorzee.fortuneblocks.handlers.BlockHandler;
+import com.doctorzee.fortuneblocks.utils.items.ItemNames;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
@@ -22,11 +23,11 @@ public class FortuneBlocksAddCommand extends ValidCommand
         super("add", "Add a material to be tracked.", Permission.ADMIN_ADD, new String[]{ "track" });
 
         addArgument(CommandArgumentBuilder.createBuilder(Material.class)
-                                          .setName("material")
-                                          .setParser(new MaterialParser())
-                                          .addValidator(new MaterialNotTrackedValidator())
-                                          .addValidator(new ItemBlockValidator())
-                                          .build());
+                            .setName("material")
+                            .setParser(new MaterialParser())
+                            .addValidator(new MaterialNotTrackedValidator())
+                            .addValidator(new ItemBlockValidator())
+                            .build());
     }
 
     @Override
@@ -36,7 +37,7 @@ public class FortuneBlocksAddCommand extends ValidCommand
 
         BlockHandler.setTracked(material, true);
 
-        Lang.MATERIALS_ADD.sendSuccess(sender, "{material}", material.name());
+        Lang.MATERIALS_ADD.sendSuccess(sender, "{material}", ItemNames.lookup(material));
     }
 
 }
