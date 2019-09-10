@@ -13,15 +13,14 @@ import com.ziluck.fortuneblocks.utils.items.ItemDb;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class FortuneBlocks extends JavaPlugin
-{
-
+public class FortuneBlocks extends JavaPlugin {
     private static FortuneBlocks instance;
 
     private static ItemDb itemHandler;
 
-    public void onEnable()
-    {
+    private static BlockHandler blockHandler;
+
+    public void onEnable() {
         instance = this;
 
         reloadConfiguration();
@@ -33,43 +32,40 @@ public class FortuneBlocks extends JavaPlugin
         Bukkit.getPluginManager().registerEvents(new BlockBreakListener(), this);
     }
 
-    public static void reloadConfiguration()
-    {
+    public static void reloadConfiguration() {
         // check lang
         File langFile = new File(instance.getDataFolder(), "lang.yml");
-        if (!langFile.exists())
-        {
+        if (!langFile.exists()) {
             instance.saveResource("lang.yml", false);
         }
         Lang.update();
 
         // check config
         File configFile = new File(instance.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-        {
+        if (!configFile.exists()) {
             instance.saveDefaultConfig();
         }
         Config.update();
 
         // check items
         File itemFile = new File(instance.getDataFolder(), "items.json");
-        if (!itemFile.exists())
-        {
+        if (!itemFile.exists()) {
             instance.saveResource("items.json", false);
         }
         itemHandler = new ItemDb(itemFile);
 
-        BlockHandler.initialize();
+        blockHandler = new BlockHandler();
     }
 
-    public static ItemDb getItemHandler()
-    {
+    public static ItemDb getItemHandler() {
         return itemHandler;
     }
 
-    public static FortuneBlocks getInstance()
-    {
-        return instance;
+    public static BlockHandler getBlockHandler() {
+        return blockHandler;
     }
 
+    public static FortuneBlocks getInstance() {
+        return instance;
+    }
 }

@@ -1,8 +1,6 @@
 package com.ziluck.fortuneblocks;
 
-public enum Permission
-{
-
+public enum Permission {
     ERROR("fortuneblocks.error"),
     SILENT_PLACE("fortuneblocks.silent"),
     PICKUP("fortuneblocks.pickup"),
@@ -14,14 +12,11 @@ public enum Permission
 
     private String permission;
 
-    private Permission(String permission)
-    {
+    private Permission(String permission) {
         this.permission = permission;
     }
 
-    public String getPermission()
-    {
+    public String getPermission() {
         return permission;
     }
-
 }
