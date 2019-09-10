@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <properties>
+        <property name="DB_TYPE" value=""/>
+        <property name="DB_URL" value=""/>
+        <property name="DB_USERNAME" value=""/>
+        <property name="DB_PASSWORD" value=""/>
+    </properties>
+
+    <typeAliases>
+        <typeAlias type="com.ziluck.fortuneblocks.handlers.BlockWrapper" alias="BlockWrapper"/>
+    </typeAliases>
+
+    <environments default="localhost">
+        <environment id="localhost">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${DB_TYPE}"/>
+                <property name="url" value="${DB_URL}"/>
+                <property name="username" value="${DB_USERNAME}"/>
+                <property name="password" value="${DB_PASSWORD}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="com/ziluck/fortuneblocks/mappers/BlockTrackerMapper.xml"/>
+    </mappers>
+</configuration>

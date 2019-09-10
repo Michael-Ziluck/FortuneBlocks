@@ -1,9 +1,9 @@
 version: 2.1
 blocks:
-- diamond_block
-- emerald_block
-- gold_block
-- coal_block
+  - diamond_block
+  - emerald_block
+  - gold_block
+  - coal_block
 pickup: true
 full:
   drop: true
@@ -14,3 +14,10 @@ require_survival: true
 tracking:
   enabled: false
   save_rate: 6000
+  tracker-type: mysql
+  database:
+    hostname: 0.0.0.0
+    port: 3306
+    username: admin
+    password: password
+    database: fortune_blocks

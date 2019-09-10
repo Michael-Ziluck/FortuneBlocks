@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * Used to wrap block locations without storing the Block objects themselves.
@@ -12,12 +11,19 @@ import java.util.StringJoiner;
  * @author Michael Ziluck
  */
 public class BlockWrapper {
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private int id;
     private int x;
     private int y;
     private int z;
-    private World world;
+    private String world;
 
-    public BlockWrapper(int x, int y, int z, World world) {
+    public BlockWrapper(int id, int x, int y, int z, String world) {
+        this(x, y, z, world);
+        this.id = id;
+    }
+
+    public BlockWrapper(int x, int y, int z, String world) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -29,7 +35,7 @@ public class BlockWrapper {
         this.x = Integer.parseInt(pieces[0]);
         this.y = Integer.parseInt(pieces[1]);
         this.z = Integer.parseInt(pieces[2]);
-        this.world = Bukkit.getWorld(pieces[3]);
+        this.world = pieces[3];
     }
 
     /**
@@ -40,24 +46,10 @@ public class BlockWrapper {
     }
 
     /**
-     * @param x the x to set
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
      * @return the y
      */
     public int getY() {
         return y;
-    }
-
-    /**
-     * @param y the y to set
-     */
-    public void setY(int y) {
-        this.y = y;
     }
 
     /**
@@ -68,38 +60,24 @@ public class BlockWrapper {
     }
 
     /**
-     * @param z the z to set
-     */
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    /**
      * @return the world
      */
     public World getWorld() {
-        return world;
-    }
-
-    /**
-     * @param world the world to set
-     */
-    public void setWorld(World world) {
-        this.world = world;
+        return Bukkit.getWorld(world);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z, world.getUID());
+        return Objects.hash(x, y, z, Objects.requireNonNull(Bukkit.getWorld(world)).getUID());
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(x);
-        sb.append(y);
-        sb.append(z);
-        sb.append(world.getName());
+        sb.append(x).append(",");
+        sb.append(y).append(",");
+        sb.append(z).append(",");
+        sb.append(world);
         return sb.toString();
     }
 }

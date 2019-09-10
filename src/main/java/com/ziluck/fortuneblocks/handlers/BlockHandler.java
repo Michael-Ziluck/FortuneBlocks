@@ -1,27 +1,21 @@
 package com.ziluck.fortuneblocks.handlers;
 
 import com.ziluck.fortuneblocks.FortuneBlocks;
+import com.ziluck.fortuneblocks.configuration.Config;
+import com.ziluck.fortuneblocks.handlers.trackers.BlockTracker;
+import com.ziluck.fortuneblocks.handlers.trackers.MySQLTracker;
+import com.ziluck.fortuneblocks.handlers.trackers.TrackerType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BlockHandler {
-    private static final BlockHandler instance;
-
-    static {
-        instance = new BlockHandler();
-    }
-
-    private Set<BlockWrapper> blockWrappers;
-
     private Set<Material> materials;
 
-    public BlockHandler() {
-        // initialize the set
-        blockWrappers = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private BlockTracker tracker;
 
+    public BlockHandler() {
         // create enum set
         materials = EnumSet.noneOf(Material.class);
 
@@ -33,41 +27,19 @@ public class BlockHandler {
                 FortuneBlocks.getInstance().getLogger().severe("Invalid Block: '" + string + "'.");
             }
         }
-    }
 
-    /**
-     * Mark a block as placed.
-     *
-     * @param block the block to mark
-     */
-    public void setPlaced(Block block) {
-        instance.blockWrappers.add(wrap(block));
-    }
-
-    /**
-     * Mark a block as placed.
-     *
-     * @param blockWrapper the block to mark
-     */
-    public void setPlaced(BlockWrapper blockWrapper) {
-        instance.blockWrappers.add(blockWrapper);
-    }
-
-    /**
-     * Mark a block as no longer placed by a player.
-     *
-     * @param block the block to mark.
-     */
-    public void clearPlaced(Block block) {
-        instance.blockWrappers.remove(wrap(block));
-    }
-
-    /**
-     * @param block the block to check.
-     * @return {@code true} if this block was placed by a player.
-     */
-    public boolean wasPlaced(Block block) {
-        return instance.blockWrappers.contains(wrap(block));
+        // check if we're tracking blocks
+        if (Config.TRACKING_ENABLED.booleanValue()) {
+            TrackerType trackerType = Config.TRACKER_TYPE.getValue();
+            switch (trackerType) {
+                case MYSQL:
+                    this.tracker = new MySQLTracker();
+                    break;
+                default:
+                    return;
+            }
+            tracker.initialize();
+        }
     }
 
     /**
@@ -98,6 +70,10 @@ public class BlockHandler {
         return Collections.unmodifiableSet(materials);
     }
 
+    public BlockTracker getTracker() {
+        return tracker;
+    }
+
     private List<String> getTrackedMaterialNames() {
         List<String> values = new LinkedList<>();
         for (Material material : materials) {
@@ -106,7 +82,7 @@ public class BlockHandler {
         return values;
     }
 
-    private static BlockWrapper wrap(Block block) {
-        return new BlockWrapper(block.getX(), block.getY(), block.getZ(), block.getWorld());
+    public static BlockWrapper wrap(Block block) {
+        return new BlockWrapper(block.getX(), block.getY(), block.getZ(), block.getWorld().getName());
     }
 }

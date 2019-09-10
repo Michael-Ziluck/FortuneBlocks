@@ -4,29 +4,24 @@ package com.ziluck.fortuneblocks.utils;
  * Designed to wrap enums to force them to behave mutably.
  *
  * @param <T> the type this MutableEnum wraps.
- *
  * @author Michael Ziluck
  */
-public class MutableEnum<T extends Enum<T>>
-{
-
-    private Enum<T> value;
+public class MutableEnum<T extends Enum<T>> {
+    private T value;
 
     /**
      * Creates a new MutableEnum wrapper for the given value.
      *
      * @param value the value to wrap.
      */
-    public MutableEnum(T value)
-    {
+    public MutableEnum(T value) {
         this.value = value;
     }
 
     /**
      * @return the currently wrapped value.
      */
-    public Enum<T> getValue()
-    {
+    public T getValue() {
         return value;
     }
 
@@ -35,10 +30,8 @@ public class MutableEnum<T extends Enum<T>>
      *
      * @param value the new wrapped value.
      */
-    public void setValue(T value)
-    {
-        if (value == null)
-        {
+    public void setValue(T value) {
+        if (value == null) {
             throw new NullPointerException("Value can't be null.");
         }
         this.value = value;
@@ -47,9 +40,7 @@ public class MutableEnum<T extends Enum<T>>
     /**
      * @return the class type of the contained Enum.
      */
-    public Class<T> getType()
-    {
+    public Class<T> getType() {
         return value.getDeclaringClass();
     }
-
 }

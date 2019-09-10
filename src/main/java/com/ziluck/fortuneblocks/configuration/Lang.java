@@ -17,8 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author Michael Ziluck
  */
-public enum Lang
-{
+public enum Lang {
     /**
      * The prefix before most of the lang messages.
      */
@@ -92,8 +91,7 @@ public enum Lang
 
     private String path;
 
-    Lang(String path, String... message)
-    {
+    Lang(String path, String... message) {
         this.path = path;
         this.message = message;
     }
@@ -104,8 +102,7 @@ public enum Lang
      *
      * @return the message for this Lang object.
      */
-    public String[] getRawMessage()
-    {
+    public String[] getRawMessage() {
         return message;
     }
 
@@ -114,16 +111,14 @@ public enum Lang
      *
      * @param message the new message.
      */
-    public void setRawMessage(String... message)
-    {
+    public void setRawMessage(String... message) {
         this.message = message;
     }
 
     /**
      * @return the path of option in the lang.yml file.
      */
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 
@@ -134,8 +129,7 @@ public enum Lang
      * @param sender     the CommandSender receiving the message.
      * @param parameters all additional arguments to fill placeholders.
      */
-    public void send(CommandSender sender, Object... parameters)
-    {
+    public void send(CommandSender sender, Object... parameters) {
         sender.sendMessage(getMessage(parameters));
     }
 
@@ -145,10 +139,8 @@ public enum Lang
      * @param sender     the CommandSender receiving the message.
      * @param parameters all additional arguments to fill placeholders.
      */
-    public void sendError(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
+    public void sendError(CommandSender sender, Object... parameters) {
+        for (String line : getMessage(parameters)) {
             ERROR.send(sender, "{message}", line);
         }
     }
@@ -159,10 +151,8 @@ public enum Lang
      * @param sender     the CommandSender receiving the message.
      * @param parameters all additional arguments to fill placeholders.
      */
-    public void sendSuccess(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
+    public void sendSuccess(CommandSender sender, Object... parameters) {
+        for (String line : getMessage(parameters)) {
             SUCCESS.send(sender, "{message}", line);
         }
     }
@@ -173,10 +163,8 @@ public enum Lang
      * @param sender     the CommandSender receiving the message.
      * @param parameters all additional arguments to fill placeholders.
      */
-    public void sendInfo(CommandSender sender, Object... parameters)
-    {
-        for (String line : getMessage(parameters))
-        {
+    public void sendInfo(CommandSender sender, Object... parameters) {
+        for (String line : getMessage(parameters)) {
             PREFIX.send(sender, "{message}", line);
         }
     }
@@ -185,14 +173,11 @@ public enum Lang
      * Renders this message and returns it. Similar behavior to {@link #send(CommandSender, Object...)}, but instead of sending the message, it simply returns it.
      *
      * @param parameters all additional arguments to fill placeholders.
-     *
      * @return the compiled message.
      */
-    public String[] getMessage(Object... parameters)
-    {
+    public String[] getMessage(Object... parameters) {
         String[] args = Arrays.copyOf(message, message.length);
-        for (int i = 0; i < args.length; i++)
-        {
+        for (int i = 0; i < args.length; i++) {
             args[i] = renderString(args[i], parameters);
         }
         return args;
@@ -203,39 +188,31 @@ public enum Lang
      *
      * @param string the rendered string.
      * @param args   the placeholders and proper content.
-     *
      * @return the rendered string.
      */
-    protected String renderString(String string, Object... args)
-    {
-        if (args.length % 2 != 0)
-        {
+    protected String renderString(String string, Object... args) {
+        if (args.length % 2 != 0) {
             throw new IllegalArgumentException("Message rendering requires arguments of an even number. " + Arrays.toString(args) + " given.");
         }
 
-        for (int i = 0; i < args.length; i += 2)
-        {
+        for (int i = 0; i < args.length; i += 2) {
             string = string.replace(args[i].toString(), CollectionUtils.firstNonNull(args[i + 1], "").toString());
         }
 
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
-    public static void update()
-    {
+    public static void update() {
         File langFile = new File(FortuneBlocks.getInstance().getDataFolder(), "lang.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(langFile);
 
         final MutableBoolean save = new MutableBoolean(false);
 
-        for (Lang lang : values())
-        {
-            if (!config.isSet(lang.getPath()) || !Config.successful(() -> lang.setRawMessage(config.getString(lang.getPath()))))
-            {
+        for (Lang lang : values()) {
+            if (!config.isSet(lang.getPath()) || !Config.successful(() -> lang.setRawMessage(config.getString(lang.getPath())))) {
                 config.set(lang.getPath(), lang.getRawMessage());
                 error(lang.getPath());
-                if (!save.booleanValue())
-                {
+                if (!save.booleanValue()) {
                     save.setValue(true);
                 }
             }
@@ -247,16 +224,13 @@ public enum Lang
      *
      * @param location the location that caused an error.
      */
-    private static void error(String location)
-    {
+    private static void error(String location) {
         FortuneBlocks.getInstance().getLogger().severe("Error loading the lang value '" + location + "'. Reverted it to default.");
     }
 
-    public static void sendUsageMessage(CommandSender sender, String[] label, String[] parameters)
-    {
+    public static void sendUsageMessage(CommandSender sender, String[] label, String[] parameters) {
         StringBuilder args = new StringBuilder("/" + StringUtils.compile(label));
-        for (String str : parameters)
-        {
+        for (String str : parameters) {
             args.append(" [").append(str).append("]");
         }
         USAGE.send(sender, "{message}", args.toString());

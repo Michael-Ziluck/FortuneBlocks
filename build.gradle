@@ -15,14 +15,22 @@ repositories {
 }
 
 dependencies {
+    // spigot
     compile group: 'org.spigotmc', name: 'spigot', version: '1.14.4-R0.1-SNAPSHOT'
 
-    compile group: 'org.mockito', name: 'mockito-core', version: '2.18.0'
-
-    compile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0'
-    compile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0'
-
+    // flyway
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.0.+'
+
+    // mybatis
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.5.+'
+
+    // mysql
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.18.0'
+
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0'
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0'
 }
 
 group = 'com.ziluck'
