@@ -1,30 +1,26 @@
 package com.ziluck.fortuneblocks.commands;
 
-import java.util.List;
-
+import com.ziluck.fortuneblocks.FortuneBlocks;
 import com.ziluck.fortuneblocks.Permission;
 import com.ziluck.fortuneblocks.commands.api.CommandArgument;
 import com.ziluck.fortuneblocks.commands.api.ValidCommand;
 import com.ziluck.fortuneblocks.configuration.Lang;
-import com.ziluck.fortuneblocks.handlers.BlockHandler;
 import com.ziluck.fortuneblocks.utils.items.ItemNames;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
-public class FortuneBlocksListCommand extends ValidCommand
-{
-    public FortuneBlocksListCommand()
-    {
+import java.util.List;
+
+public class FortuneBlocksListCommand extends ValidCommand {
+    public FortuneBlocksListCommand() {
         super("list", "List off all tracked materials.", Permission.ADMIN_LIST);
     }
 
     @Override
-    public void validRun(CommandSender sender, String[] label, List<CommandArgument<?>> arguments)
-    {
+    public void validRun(CommandSender sender, String[] label, List<CommandArgument<?>> arguments) {
         Lang.HEADER_FOOTER.send(sender);
 
-        for (Material material : BlockHandler.getTrackedMaterials())
-        {
+        for (Material material : FortuneBlocks.getBlockHandler().getTrackedMaterials()) {
             Lang.MATERIALS_LIST.send(sender, "{material}", ItemNames.lookup(material));
         }
 

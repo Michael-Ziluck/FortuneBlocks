@@ -9,8 +9,7 @@ import java.util.Set;
  *
  * @author Michael Ziluck
  */
-public class EnumUtil
-{
+public class EnumUtil {
     /**
      * Return a set containing <b>all</b> fields of the given enum that maths one of the provided
      * names.
@@ -18,26 +17,19 @@ public class EnumUtil
      * @param enumClass The class to search through
      * @param names     The names of the fields to search for
      * @param <T>       The enum to search through
-     *
      * @return All matching enum fields
      */
-    public static <T extends Enum> Set<T> getAllMatching(Class<T> enumClass, String... names)
-    {
+    public static <T extends Enum> Set<T> getAllMatching(Class<T> enumClass, String... names) {
         Set<T> set = new HashSet<>();
 
-        for (String name : names)
-        {
-            try
-            {
+        for (String name : names) {
+            try {
                 Field enumField = enumClass.getDeclaredField(name);
 
-                if (enumField.isEnumConstant())
-                {
+                if (enumField.isEnumConstant()) {
                     set.add((T) enumField.get(null));
                 }
-            }
-            catch (NoSuchFieldException | IllegalAccessException ignored)
-            {
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
             }
         }
 
