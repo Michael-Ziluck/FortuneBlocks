@@ -1,9 +1,5 @@
 package com.ziluck.fortuneblocks.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
 import com.ziluck.fortuneblocks.FortuneBlocks;
 import com.ziluck.fortuneblocks.Permission;
 import com.ziluck.fortuneblocks.configuration.Config;
@@ -19,8 +15,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class BlockBreakListener implements Listener {
     // cooldown on sending them full messages
@@ -29,10 +28,6 @@ public class BlockBreakListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent event) {
-        // should already ignore, but just in case
-        if (event.isCancelled()) {
-            return;
-        }
         // if they aren't in survival, ignore them
         if (Config.REQUIRE_SURVIVAL.booleanValue() && event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
             return;

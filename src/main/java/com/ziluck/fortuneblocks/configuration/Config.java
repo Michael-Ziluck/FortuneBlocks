@@ -21,11 +21,6 @@ public final class Config {
     public static final MutableBoolean TRACKING_ENABLED = new MutableBoolean(false);
 
     /**
-     * How often the placed blocks should be saved to the file system/database.
-     */
-    public static final MutableInt TRACKING_SAVE_RATE = new MutableInt(6000);
-
-    /**
      * If survival is required for the plugin to function.
      */
     public static final MutableBoolean REQUIRE_SURVIVAL = new MutableBoolean(true);
@@ -52,6 +47,8 @@ public final class Config {
 
     public static final MutableEnum<TrackerType> TRACKER_TYPE = new MutableEnum<>(TrackerType.MYSQL);
 
+    public static final MutableString TRACKER_FILE_NAME = new MutableString("placed-blocks.db");
+
     public static final MutableString TRACKER_DATABASE_USERNAME = new MutableString("admin");
     public static final MutableString TRACKER_DATABASE_PASSWORD = new MutableString("password");
     public static final MutableString TRACKER_DATABASE_HOSTNAME = new MutableString("localhost");
@@ -67,8 +64,19 @@ public final class Config {
         updateValue(config, save, "version", VERSION);
 
         // the options related to persisting blocks between restarts
+        updateValue(config, save, "require_survival", REQUIRE_SURVIVAL);
+        updateValue(config, save, "pickup", PICKUP);
+        updateValue(config, save, "full.message.use", FULL_MESSAGE_USE);
+        updateValue(config, save, "full.message.cooldown", FULL_MESSAGE_COOLDOWN);
+        updateValue(config, save, "full.drop", FULL_DROP);
+        updateValue(config, save, "tracking.type", TRACKER_TYPE);
+        updateValue(config, save, "tracking.file-name", TRACKER_FILE_NAME);
         updateValue(config, save, "tracking.enabled", TRACKING_ENABLED);
-        updateValue(config, save, "tracking.save_rate", TRACKING_SAVE_RATE);
+        updateValue(config, save, "tracking.database.username", TRACKER_DATABASE_USERNAME);
+        updateValue(config, save, "tracking.database.password", TRACKER_DATABASE_PASSWORD);
+        updateValue(config, save, "tracking.database.hostname", TRACKER_DATABASE_HOSTNAME);
+        updateValue(config, save, "tracking.database.port", TRACKER_DATABASE_PORT);
+        updateValue(config, save, "tracking.database.database", TRACKER_DATABASE_DATABASE);
     }
 
     /**
