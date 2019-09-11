@@ -2,6 +2,9 @@ package com.ziluck.fortuneblocks.utils.items;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,7 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
@@ -30,8 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 
-public class ItemDb
-{
+public class ItemDb {
     private static Gson gson = new Gson();
 
     // Maps primary name to ItemData
@@ -47,16 +48,13 @@ public class ItemDb
 
     private boolean ready = false;
 
-    public ItemDb(File file)
-    {
+    public ItemDb(File file) {
         this.file = file;
         reloadConfig();
     }
 
-    public void reloadConfig()
-    {
-        if (file == null)
-        {
+    public void reloadConfig() {
+        if (file == null) {
             file = new File(FortuneBlocks.getInstance().getDataFolder(), "items.json");
         }
 
@@ -64,89 +62,70 @@ public class ItemDb
         FortuneBlocks.getInstance().getLogger().info(String.format("Loaded %s items from items.json.", listNames().size()));
     }
 
-    private void rebuild()
-    {
+    private void rebuild() {
         this.reset();
 
-        try
-        {
-            String json = FileUtils.readLines(file, "UTF-8").stream()
-                                   .filter(line -> !line.startsWith("#"))
-                                   .collect(Collectors.joining());
+        try {
+            String json = Files.lines(file.toPath(), StandardCharsets.UTF_8)
+                    .filter(line -> !line.startsWith("#"))
+                    .collect(Collectors.joining());
             this.loadJSON(String.join("\n", json));
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
         ready = true;
     }
 
-    private void reset()
-    {
+    private void reset() {
         ready = false;
         items.clear();
         itemAliases.clear();
         allAliases.clear();
     }
 
-    public void loadJSON(String source)
-    {
+    public void loadJSON(String source) {
         JsonObject map = (new JsonParser()).parse(source).getAsJsonObject();
 
-        for (Map.Entry<String, JsonElement> entry : map.entrySet())
-        {
+        for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
             String key = entry.getKey();
             JsonElement element = entry.getValue();
             boolean valid = false;
 
-            if (element.isJsonObject())
-            {
+            if (element.isJsonObject()) {
                 ItemData data = gson.fromJson(element, ItemData.class);
                 items.put(key, data);
                 valid = true;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     String target = element.getAsString();
                     itemAliases.put(key, target);
                     valid = true;
-                }
-                catch (Exception ignored)
-                {
+                } catch (Exception ignored) {
                 }
             }
 
-            if (valid)
-            {
+            if (valid) {
                 allAliases.add(key);
-            }
-            else
-            {
+            } else {
                 FortuneBlocks.getInstance().getLogger().warning(String.format("Failed to add item: \"%s\": %s", key, element.toString()));
             }
         }
     }
 
-    public ItemStack get(String id) throws Exception
-    {
+    public ItemStack get(String id) throws Exception {
         id = id.toLowerCase();
         final String[] split = id.split(":");
 
         ItemData data = getByName(split[0]);
 
-        if (data == null)
-        {
+        if (data == null) {
             throw new Exception("Unknown item name: " + id);
         }
 
         Material material = data.getMaterial();
 
-        if (!material.isItem())
-        {
+        if (!material.isItem()) {
             throw new Exception("Cannot spawn " + id + "; this is not a spawnable item.");
         }
 
@@ -156,23 +135,20 @@ public class ItemDb
         PotionData potionData = data.getPotionData();
         ItemMeta meta = stack.getItemMeta();
 
-        if (potionData != null && meta instanceof PotionMeta)
-        {
+        if (potionData != null && meta instanceof PotionMeta) {
             PotionMeta potionMeta = (PotionMeta) meta;
             potionMeta.setBasePotionData(potionData);
         }
 
         // For some reason, Damageable doesn't extend ItemMeta but CB implements them in the same
         // class. As to why, your guess is as good as mine.
-        if (split.length > 1 && meta instanceof Damageable)
-        {
+        if (split.length > 1 && meta instanceof Damageable) {
             Damageable damageMeta = (Damageable) meta;
             damageMeta.setDamage(Integer.parseInt(split[1]));
         }
 
         EntityType entity = data.getEntity();
-        if (entity != null && material.toString().contains("SPAWNER"))
-        {
+        if (entity != null && material.toString().contains("SPAWNER")) {
             BlockStateMeta bsm = (BlockStateMeta) meta;
 
             BlockState bs = bsm.getBlockState();
@@ -187,31 +163,24 @@ public class ItemDb
         return stack;
     }
 
-    private ItemData getByName(String name)
-    {
+    private ItemData getByName(String name) {
         name = name.toLowerCase();
-        if (items.containsKey(name))
-        {
+        if (items.containsKey(name)) {
             return items.get(name);
-        }
-        else if (itemAliases.containsKey(name))
-        {
+        } else if (itemAliases.containsKey(name)) {
             return items.get(itemAliases.get(name));
         }
 
         return null;
     }
 
-    public List<String> nameList(ItemStack item)
-    {
+    public List<String> nameList(ItemStack item) {
         List<String> names = new ArrayList<>();
         String primaryName = name(item);
         names.add(primaryName);
 
-        for (Map.Entry<String, String> entry : itemAliases.entrySet())
-        {
-            if (entry.getValue().equalsIgnoreCase(primaryName))
-            {
+        for (Map.Entry<String, String> entry : itemAliases.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(primaryName)) {
                 names.add(entry.getKey());
             }
         }
@@ -219,14 +188,11 @@ public class ItemDb
         return names;
     }
 
-    public String name(ItemStack item)
-    {
+    public String name(ItemStack item) {
         ItemData data = lookup(item);
 
-        for (Map.Entry<String, ItemData> entry : items.entrySet())
-        {
-            if (entry.getValue().equals(data))
-            {
+        for (Map.Entry<String, ItemData> entry : items.entrySet()) {
+            if (entry.getValue().equals(data)) {
                 return entry.getKey();
             }
         }
@@ -234,28 +200,21 @@ public class ItemDb
         return null;
     }
 
-    public ItemData lookup(ItemStack item)
-    {
+    public ItemData lookup(ItemStack item) {
         Material type = item.getType();
 
-        if (ItemUtils.isPotion(type) && item.getItemMeta() instanceof PotionMeta)
-        {
+        if (ItemUtils.isPotion(type) && item.getItemMeta() instanceof PotionMeta) {
             PotionData potion = ((PotionMeta) item.getItemMeta()).getBasePotionData();
             return new ItemData(type, potion);
-        }
-        else if (type.toString().contains("SPAWNER"))
-        {
+        } else if (type.toString().contains("SPAWNER")) {
             EntityType entity = ((CreatureSpawner) ((BlockStateMeta) item.getItemMeta()).getBlockState()).getSpawnedType();
             return new ItemData(type, entity);
-        }
-        else
-        {
+        } else {
             return new ItemData(type);
         }
     }
 
-    public Collection<String> listNames()
-    {
+    public Collection<String> listNames() {
         return Collections.unmodifiableSet(allAliases);
     }
 

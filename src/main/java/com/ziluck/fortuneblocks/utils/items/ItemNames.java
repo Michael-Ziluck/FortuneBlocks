@@ -23,26 +23,26 @@ import org.bukkit.material.MaterialData;
  * @author Michael Ziluck
  * @version 1.13.2
  */
-public class ItemNames
-{
+public class ItemNames {
     private static Map<Material, String> ITEM_NAMES;
 
-    static
-    {
+    static {
         ImmutableMap.Builder<Material, String> builder = ImmutableMap.builder();
         InputStream is = FortuneBlocks.getInstance().getResource("itemNames.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String str;
-        try
-        {
-            while ((str = br.readLine()) != null)
-            {
-                builder.put(Material.valueOf(str.split("~")[0]), str.split("~")[1]);
+        try {
+            while ((str = br.readLine()) != null) {
+                String[] split = str.split("~");
+                Material material = Material.getMaterial(split[0]);
+                if (material != null) {
+                    builder.put(material, split[1]);
+                } else {
+                    FortuneBlocks.getInstance().getLogger().severe("Invalid internal material name. Check for plugin updates.");
+                }
             }
             ITEM_NAMES = builder.build();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
@@ -53,37 +53,28 @@ public class ItemNames
      * the (English-language) vanilla Minecraft client would display it.
      *
      * @param stack the item stack
-     *
      * @return a friendly printable name for the item
      */
-    public static String lookup(ItemStack stack)
-    {
-        if (stack == null || stack.getType() == Material.AIR)
-        {
+    public static String lookup(ItemStack stack) {
+        if (stack == null || stack.getType() == Material.AIR) {
             return "Fist";
         }
-        if (stack.hasItemMeta())
-        {
+        if (stack.hasItemMeta()) {
             ItemMeta meta = stack.getItemMeta();
-            if (meta.getDisplayName() != null)
-            {
+            if (meta.getDisplayName() != null) {
                 return meta.getDisplayName();
-            }
-            else if (meta instanceof BookMeta)
-            {
+            } else if (meta instanceof BookMeta) {
                 return ((BookMeta) meta).getTitle();
             }
         }
         return ITEM_NAMES.containsKey(stack.getType()) ? ITEM_NAMES.get(stack.getType()) : stack.getType().toString();
     }
 
-    public static String lookup(MaterialData data)
-    {
+    public static String lookup(MaterialData data) {
         return lookup(data.toItemStack(1));
     }
 
-    public static String lookup(Material material)
-    {
+    public static String lookup(Material material) {
         return lookup(new ItemStack(material));
     }
 
@@ -92,11 +83,9 @@ public class ItemNames
      * (English-language) vanilla Minecraft client would display it.
      *
      * @param block the block
-     *
      * @return a friendly printable name for the block
      */
-    public static String lookup(Block block)
-    {
+    public static String lookup(Block block) {
         return lookup(new ItemStack(block.getType(), 1, block.getData()));
     }
 
@@ -107,11 +96,9 @@ public class ItemNames
      * {@link #lookup(org.bukkit.inventory.ItemStack)} .
      *
      * @param stack the item stack
-     *
      * @return a friendly printable name for the item, with amount information
      */
-    public static String lookupWithAmount(ItemStack stack)
-    {
+    public static String lookupWithAmount(ItemStack stack) {
         return stack.getAmount() + " x " + lookup(stack);
     }
 
