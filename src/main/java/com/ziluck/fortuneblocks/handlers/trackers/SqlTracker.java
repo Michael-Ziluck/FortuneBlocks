@@ -28,9 +28,13 @@ public abstract class SqlTracker extends BlockTracker {
 
     protected abstract Class<? extends Driver> getDriverClass();
 
+    protected String getJdbcString() {
+        return "jdbc:" + getJdbcType() + "://" + TRACKER_DATABASE_HOSTNAME + ":" + TRACKER_DATABASE_PORT + "/" + TRACKER_DATABASE_DATABASE;
+    }
+
     @Override
     public boolean initialize() {
-        String jdbcUrl = "jdbc:" + getJdbcType() + "://" + TRACKER_DATABASE_HOSTNAME + ":" + TRACKER_DATABASE_PORT + "/" + TRACKER_DATABASE_DATABASE;
+        String jdbcUrl = getJdbcString();
 
         try {
             Flyway flyway = Flyway.configure()

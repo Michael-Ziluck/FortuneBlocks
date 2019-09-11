@@ -13,8 +13,8 @@ full:
 require_survival: true
 tracking:
   enabled: false
-  save_rate: 6000
-  tracker-type: mysql
+  type: sqlite
+  file-name: blocks.db
   database:
     hostname: 0.0.0.0
     port: 3306

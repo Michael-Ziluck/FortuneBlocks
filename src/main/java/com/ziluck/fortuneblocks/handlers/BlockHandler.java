@@ -4,6 +4,7 @@ import com.ziluck.fortuneblocks.FortuneBlocks;
 import com.ziluck.fortuneblocks.configuration.Config;
 import com.ziluck.fortuneblocks.handlers.trackers.BlockTracker;
 import com.ziluck.fortuneblocks.handlers.trackers.MySQLTracker;
+import com.ziluck.fortuneblocks.handlers.trackers.SqLiteTracker;
 import com.ziluck.fortuneblocks.handlers.trackers.TrackerType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,6 +36,8 @@ public class BlockHandler {
                 case MYSQL:
                     this.tracker = new MySQLTracker();
                     break;
+                case SQLITE:
+                    this.tracker = new SqLiteTracker();
                 default:
                     return;
             }
