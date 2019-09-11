@@ -28,6 +28,6 @@
     </environments>
 
     <mappers>
-        <mapper resource="com/ziluck/fortuneblocks/mappers/BlockTrackerMapper.xml"/>
+        <mapper resource="com/ziluck/fortuneblocks/mappers/BlockWrapperMapper.xml"/>
     </mappers>
 </configuration>
