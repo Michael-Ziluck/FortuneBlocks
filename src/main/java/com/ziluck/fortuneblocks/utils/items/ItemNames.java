@@ -34,7 +34,7 @@ public class ItemNames {
         try {
             while ((str = br.readLine()) != null) {
                 String[] split = str.split("~");
-                Material material = Material.getMaterial(split[0]);
+                Material material = Material.matchMaterial(split[0], false);
                 if (material != null) {
                     builder.put(material, split[1]);
                 } else {
