@@ -76,11 +76,11 @@ public abstract class ValidBaseCommand extends ValidCommand {
 
     @Override
     public List<String> processTabComplete(CommandSender sender, String[] rawArguments) {
-        if (rawArguments.length == 1) {
+        ValidCommand command;
+        if (rawArguments.length == 0 || (command = getSubCommand(rawArguments[0])) == null) {
             return getSubCommandNames(sender, rawArguments[0]);
         } else {
-            return getSubCommand(rawArguments[0]).processTabComplete(sender, Arrays.copyOfRange(rawArguments, 1, rawArguments.length));
-
+            return command.processTabComplete(sender, Arrays.copyOfRange(rawArguments, 1, rawArguments.length));
         }
     }
 
@@ -117,7 +117,7 @@ public abstract class ValidBaseCommand extends ValidCommand {
      */
     public List<String> getSubCommandNames(CommandSender sender, String start) {
         List<String> commandNames = new LinkedList<>();
-        if (!hasPermission() || sender.hasPermission(getPermission().getPermission())) {
+        if (hasPermission() && !sender.hasPermission(getPermission().getPermission())) {
             return commandNames;
         }
         String match;

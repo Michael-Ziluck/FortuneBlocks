@@ -52,7 +52,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         ValidCommand command = getCommand(label);
         if (command != null) {
             if (sender.hasPermission(command.getPermission().getPermission())) {
-                command.process(sender, new String[]{ label }, args);
+                command.process(sender, new String[]{label}, args);
             } else {
                 // The following classes also have this check: ...
                 Lang.NO_PERMS.sendError(sender);
@@ -66,8 +66,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         ValidCommand command = getCommand(alias);
+        List<String> argList = new ArrayList<>(Arrays.asList(args));
+        argList.removeIf(str -> str == null || str.equals(""));
+        if (argList.size() == 0) {
+            argList.add("");
+        }
         if (command != null) {
-            return command.processTabComplete(sender, args);
+            return command.processTabComplete(sender, argList.toArray(new String[0]));
         }
 
         return Collections.emptyList();

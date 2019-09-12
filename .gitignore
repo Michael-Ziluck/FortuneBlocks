@@ -11,3 +11,5 @@ bin/
 build/
 
 out/
+logs/
+TestServer/

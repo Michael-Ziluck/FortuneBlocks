@@ -18,8 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public abstract class ValidCommand
-{
+public abstract class ValidCommand {
 
     protected String name;
 
@@ -47,8 +46,7 @@ public abstract class ValidCommand
      * @param blocksConsole if this command is unusable by the console.
      * @param aliases       the aliases of the command.
      */
-    public ValidCommand(String name, String description, Permission permission, boolean blocksConsole, String[] aliases)
-    {
+    public ValidCommand(String name, String description, Permission permission, boolean blocksConsole, String[] aliases) {
         this.name = name;
         this.description = description;
         this.permission = permission;
@@ -57,8 +55,7 @@ public abstract class ValidCommand
         this.senderValidators = new LinkedList<>();
         this.arguments = new ArrayList<>();
         this.values = HashBasedTable.create();
-        for (int i = 0; i < aliases.length; i++)
-        {
+        for (int i = 0; i < aliases.length; i++) {
             aliases[i] = aliases[i] == null ? "" : aliases[i].toLowerCase();
         }
     }
@@ -70,11 +67,9 @@ public abstract class ValidCommand
      * @param description   the description of the command.
      * @param permission    the required permission for the command.
      * @param blocksConsole if this command is unusable by the console.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, Permission permission, boolean blocksConsole)
-    {
+    public ValidCommand(String name, String description, Permission permission, boolean blocksConsole) {
         this(name, description, permission, blocksConsole, new String[0]);
     }
 
@@ -85,11 +80,9 @@ public abstract class ValidCommand
      * @param description the description of the command.
      * @param permission  the required permission for the command.
      * @param aliases     the aliases of the command.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, Permission permission, String[] aliases)
-    {
+    public ValidCommand(String name, String description, Permission permission, String[] aliases) {
         this(name, description, permission, false, aliases);
     }
 
@@ -100,11 +93,9 @@ public abstract class ValidCommand
      * @param description   the description of the command.
      * @param blocksConsole if this command is unusable by the console.
      * @param aliases       the aliases of the command.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, boolean blocksConsole, String[] aliases)
-    {
+    public ValidCommand(String name, String description, boolean blocksConsole, String[] aliases) {
         this(name, description, null, blocksConsole, aliases);
     }
 
@@ -114,11 +105,9 @@ public abstract class ValidCommand
      * @param name        the name of the command.
      * @param description the description of the command.
      * @param permission  the required permission for the command.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, Permission permission)
-    {
+    public ValidCommand(String name, String description, Permission permission) {
         this(name, description, permission, false, new String[0]);
     }
 
@@ -128,11 +117,9 @@ public abstract class ValidCommand
      * @param name          the name of the command.
      * @param description   the description of the command.
      * @param blocksConsole if this command is unusable by the console.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, boolean blocksConsole)
-    {
+    public ValidCommand(String name, String description, boolean blocksConsole) {
         this(name, description, null, blocksConsole, new String[0]);
     }
 
@@ -142,11 +129,9 @@ public abstract class ValidCommand
      * @param name        the name of the command.
      * @param description the description of the command.
      * @param aliases     the aliases of the command.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description, String[] aliases)
-    {
+    public ValidCommand(String name, String description, String[] aliases) {
         this(name, description, null, false, aliases);
     }
 
@@ -155,11 +140,9 @@ public abstract class ValidCommand
      *
      * @param name        the name of the command.
      * @param description the description of the command.
-     *
      * @see #ValidCommand(String, String, Permission, boolean, String[])
      */
-    public ValidCommand(String name, String description)
-    {
+    public ValidCommand(String name, String description) {
         this(name, description, null, false, new String[0]);
     }
 
@@ -172,62 +155,48 @@ public abstract class ValidCommand
      * @param label        the label from which the command was sent
      * @param rawArguments the unparsed and non-validated arguments.
      */
-    protected void process(CommandSender sender, String[] label, String[] rawArguments)
-    {
-        if (rawArguments.length < getMinimumLength() || rawArguments.length > getMaximumLength())
-        {
+    protected void process(CommandSender sender, String[] label, String[] rawArguments) {
+        if (rawArguments.length < getMinimumLength() || rawArguments.length > getMaximumLength()) {
             Lang.sendUsageMessage(sender, label, getArgumentNames());
             return;
         }
-        for (SenderValidator senderValidator : senderValidators)
-        {
-            if (!senderValidator.validate(sender))
-            {
+        for (SenderValidator senderValidator : senderValidators) {
+            if (!senderValidator.validate(sender)) {
                 return;
             }
         }
 
-        if (rawArguments.length == 0 && blocksConsole() && sender instanceof ConsoleCommandSender)
-        {
+        if (rawArguments.length == 0 && blocksConsole() && sender instanceof ConsoleCommandSender) {
             Lang.ONLY_PLAYERS.sendError(sender);
             return;
         }
 
         CommandArgument<?> argument;
-        for (int i = 0; i < rawArguments.length; i++)
-        {
+        for (int i = 0; i < rawArguments.length; i++) {
             argument = getArgument(i);
 
             // this should never happen, it is here exclusively to prevent potential errors that were not caught with exceptions earlier
-            if (argument == null)
-            {
+            if (argument == null) {
                 Lang.sendUsageMessage(sender, label, getArgumentNames());
                 return;
             }
 
-            if (blocksConsole() && !argument.allowsConsole() && sender instanceof ConsoleCommandSender)
-            {
+            if (blocksConsole() && !argument.allowsConsole() && sender instanceof ConsoleCommandSender) {
                 Lang.ONLY_PLAYERS.sendError(sender);
                 return;
             }
 
-            if (!argument.process(sender, label, !argument.hasVariableLength() ? rawArguments[i] : StringUtils.compile(Arrays.copyOfRange(rawArguments, i, rawArguments.length))))
-            {
+            if (!argument.process(sender, label, !argument.hasVariableLength() ? rawArguments[i] : StringUtils.compile(Arrays.copyOfRange(rawArguments, i, rawArguments.length)))) {
                 return;
             }
         }
-        try
-        {
+        try {
             validRun(sender, label, arguments);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             sender.sendMessage("§4An error occurred. Contact a staff member immediately.");
-            for (Player player : Bukkit.getOnlinePlayers())
-            {
-                if (player.hasPermission(Permission.ERROR.getPermission()))
-                {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (player.hasPermission(Permission.ERROR.getPermission())) {
                     player.sendMessage("§4§lERROR: §cA player tried to run a FortuneBlocks command and it caused an error. Tell an administrator to check the console.");
                 }
             }
@@ -243,32 +212,26 @@ public abstract class ValidCommand
      *
      * @param sender       the person who sent the tab request.
      * @param rawArguments the arguments already typed by the player.
-     *
      * @return the suggestions for tab complete.
      */
-    public List<String> processTabComplete(CommandSender sender, String[] rawArguments)
-    {
+    public List<String> processTabComplete(CommandSender sender, String[] rawArguments) {
+        if (rawArguments.length == 0 || arguments.size() == 0) {
+            return Collections.emptyList();
+        }
         Iterator<CommandArgument<?>> it = arguments.iterator();
         int i = 0;
         CommandArgument<?> argument = null;
-        while (it.hasNext() && i < rawArguments.length)
-        {
+        while (it.hasNext() && i < rawArguments.length) {
             argument = it.next();
             i++;
         }
-        if (argument != null)
-        {
-            if (!argument.hasPermission() || sender.hasPermission(argument.getPermission().getPermission()))
-            {
+        if (argument != null) {
+            if (!argument.hasPermission() || sender.hasPermission(argument.getPermission().getPermission())) {
                 return argument.getRecommendations(sender, rawArguments[rawArguments.length - 1]);
+            } else {
+                return Collections.emptyList();
             }
-            else
-            {
-                return Arrays.asList();
-            }
-        }
-        else
-        {
+        } else {
             return CommandHandler.defaultTabComplete(sender, rawArguments[rawArguments.length - 1]);
         }
     }
@@ -290,28 +253,24 @@ public abstract class ValidCommand
      *
      * @return the already processed values.
      */
-    public Table<Integer, Class<?>, Object> getValues()
-    {
+    public Table<Integer, Class<?>, Object> getValues() {
         return values;
     }
 
     /**
      * Clear all the stored values in the table that were added from the command's usage.
      */
-    private void clearTable()
-    {
+    private void clearTable() {
         values.clear();
     }
 
     /**
      * @return an array of all the names of the arguments.
      */
-    public String[] getArgumentNames()
-    {
+    public String[] getArgumentNames() {
         String[] argumentNames = new String[arguments.size()];
         int i = 0;
-        for (CommandArgument<?> argument : arguments)
-        {
+        for (CommandArgument<?> argument : arguments) {
             argumentNames[i] = argument.getName();
             i++;
         }
@@ -324,13 +283,10 @@ public abstract class ValidCommand
      *
      * @return the minimum length of the raw command arguments.
      */
-    protected int getMinimumLength()
-    {
+    protected int getMinimumLength() {
         int minimumLength = 0;
-        for (CommandArgument<?> argument : arguments)
-        {
-            if (!argument.isOptional())
-            {
+        for (CommandArgument<?> argument : arguments) {
+            if (!argument.isOptional()) {
                 minimumLength++;
             }
         }
@@ -343,14 +299,11 @@ public abstract class ValidCommand
      *
      * @return the maximum length of the raw command arguments.
      */
-    protected int getMaximumLength()
-    {
-        if (arguments.size() == 0)
-        {
+    protected int getMaximumLength() {
+        if (arguments.size() == 0) {
             return 0;
         }
-        if (CollectionUtils.getLast(arguments).hasVariableLength())
-        {
+        if (CollectionUtils.getLast(arguments).hasVariableLength()) {
             return Integer.MAX_VALUE;
         }
         return arguments.size();
@@ -364,17 +317,13 @@ public abstract class ValidCommand
      *
      * @param argument the new argument
      */
-    protected void addArgument(CommandArgument<?> argument)
-    {
-        if (arguments.size() != 0)
-        {
+    protected void addArgument(CommandArgument<?> argument) {
+        if (arguments.size() != 0) {
 
-            if (!argument.isOptional() && CollectionUtils.getLast(arguments).isOptional())
-            {
+            if (!argument.isOptional() && CollectionUtils.getLast(arguments).isOptional()) {
                 throw new IllegalArgumentException("Required arguments can only follow other required arguments.");
             }
-            if (CollectionUtils.getLast(arguments).hasVariableLength())
-            {
+            if (CollectionUtils.getLast(arguments).hasVariableLength()) {
                 throw new IllegalArgumentException("Arguments of variable length must be the last argument.");
             }
         }
@@ -387,11 +336,9 @@ public abstract class ValidCommand
      * Remove an existing argument from the command.
      *
      * @param argument the existing argument.
-     *
      * @return whether or not the argument still existed.
      */
-    protected boolean removeArgument(CommandArgument<?> argument)
-    {
+    protected boolean removeArgument(CommandArgument<?> argument) {
         return arguments.remove(argument);
     }
 
@@ -399,11 +346,9 @@ public abstract class ValidCommand
      * Remove an existing argument from the command, referenced by name.
      *
      * @param argumentName the name of the argument.
-     *
      * @return whether or not the argument existed.
      */
-    protected boolean removeArgument(String argumentName)
-    {
+    protected boolean removeArgument(String argumentName) {
         return removeArgument(getArgument(argumentName));
     }
 
@@ -414,22 +359,17 @@ public abstract class ValidCommand
      *
      * @return the current existing arguments.
      */
-    public List<CommandArgument<?>> getArguments()
-    {
+    public List<CommandArgument<?>> getArguments() {
         return Collections.unmodifiableList(arguments);
     }
 
     /**
      * @param ordinal the ordinal.
-     *
      * @return the argument at the given ordinal.
      */
-    protected CommandArgument<?> getArgument(int ordinal)
-    {
-        for (CommandArgument<?> argument : arguments)
-        {
-            if (argument.getOrdinal() == ordinal)
-            {
+    protected CommandArgument<?> getArgument(int ordinal) {
+        for (CommandArgument<?> argument : arguments) {
+            if (argument.getOrdinal() == ordinal) {
                 return argument;
             }
         }
@@ -441,16 +381,12 @@ public abstract class ValidCommand
      * sensitive.
      *
      * @param argumentName the name of the argument.
-     *
      * @return the argument with the given name.
      */
-    protected CommandArgument<?> getArgument(String argumentName)
-    {
+    protected CommandArgument<?> getArgument(String argumentName) {
         argumentName = argumentName.toLowerCase();
-        for (CommandArgument<?> arg : arguments)
-        {
-            if (arg.getName().equals(argumentName))
-            {
+        for (CommandArgument<?> arg : arguments) {
+            if (arg.getName().equals(argumentName)) {
                 return arg;
             }
         }
@@ -462,8 +398,7 @@ public abstract class ValidCommand
      *
      * @param senderValidator the new validator
      */
-    protected void addSenderValidator(SenderValidator senderValidator)
-    {
+    protected void addSenderValidator(SenderValidator senderValidator) {
         senderValidators.add(senderValidator);
     }
 
@@ -471,24 +406,18 @@ public abstract class ValidCommand
      * Checks whether the passed in command string matches this particular valid command,
      *
      * @param label the label of the command.
-     *
      * @return {@code true} if the parameter matches the command. Otherwise, returns {@code false}.
      */
-    protected boolean matches(String label)
-    {
+    protected boolean matches(String label) {
         label = label.toLowerCase();
-        if (label == null)
-        {
+        if (label == null) {
             return false;
         }
-        if (label.equals(getName()))
-        {
+        if (label.equals(getName())) {
             return true;
         }
-        for (String alias : aliases)
-        {
-            if (label.equals(alias))
-            {
+        for (String alias : aliases) {
+            if (label.equals(alias)) {
                 return true;
             }
         }
@@ -497,20 +426,15 @@ public abstract class ValidCommand
 
     /**
      * @param start the start of the alias to search for.
-     *
      * @return the name or alias that starts with the given string.
      */
-    protected String getMatchingAlias(String start)
-    {
+    protected String getMatchingAlias(String start) {
         start = start.toLowerCase();
-        if (name.startsWith(start))
-        {
+        if (name.startsWith(start)) {
             return name;
         }
-        for (String alias : aliases)
-        {
-            if (alias.startsWith(start))
-            {
+        for (String alias : aliases) {
+            if (alias.startsWith(start)) {
                 return alias;
             }
         }
@@ -520,29 +444,25 @@ public abstract class ValidCommand
     /**
      * @return all other names this command could be referenced by besides it's name.
      */
-    public String[] getAliases()
-    {
+    public String[] getAliases() {
         return aliases;
     }
 
     /**
      * @return {@code true} if this command is unusable by the console unless overridden by an argument.
      */
-    public boolean blocksConsole()
-    {
+    public boolean blocksConsole() {
         return blocksConsole;
     }
 
-    public boolean hasPermission()
-    {
+    public boolean hasPermission() {
         return permission != null;
     }
 
     /**
      * @return the permission required to run this command.
      */
-    public Permission getPermission()
-    {
+    public Permission getPermission() {
         return permission;
     }
 
@@ -553,8 +473,7 @@ public abstract class ValidCommand
      *
      * @return the description of the command.
      */
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
@@ -565,8 +484,7 @@ public abstract class ValidCommand
      *
      * @return the name of the command.
      */
-    public String getName()
-    {
+    public String getName() {
         return name.toLowerCase();
     }
 
