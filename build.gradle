@@ -1,7 +1,16 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'signing'
 }
+
+group = 'com.ziluck'
+version = '2.2.0-SNAPSHOT'
+description = 'Spigot plugin for enabling the Fortune enchantment on any block'
+
+archivesBaseName = 'fortuneblocks'
+
+sourceCompatibility = '1.8'
 
 jar {
     from {
@@ -9,11 +18,19 @@ jar {
     }
 }
 
+task sourcesJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
 repositories {
     mavenLocal()
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
-    }
+    mavenCentral()
 }
 
 dependencies {
@@ -39,11 +56,54 @@ dependencies {
     testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
-group = 'com.ziluck'
-version = '2.2'
-description = 'FortuneBlocks'
-sourceCompatibility = '1.8'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'fortuneblocks'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = rootProject.name
+                description = rootProject.description
+                url = "https://www.spigotmc.org/resources/fortuneblocks.8766/"
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'mzilu'
+                        name = 'Michael Ziluck'
+                        email = 'michael@ziluck.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/ZiluckMichael/FortuneBlocks.git'
+                    developerConnection = 'scm:git:ssh://github.com/ZiluckMichael/FortuneBlocks.git'
+                    url = 'https://github.com/ZiluckMichael/FortuneBlocks'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
