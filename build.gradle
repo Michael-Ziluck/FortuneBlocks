@@ -28,6 +28,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+javadoc {
+    options.links += "https://hub.spigotmc.org/javadocs/spigot/"
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
