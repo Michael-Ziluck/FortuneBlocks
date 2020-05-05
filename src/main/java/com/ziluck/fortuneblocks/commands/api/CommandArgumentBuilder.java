@@ -66,8 +66,8 @@ public class CommandArgumentBuilder<T> {
     }
 
     /**
-     * Marks this argument as optional. It defaults to false which is why there is no option to disable it as each
-     * option should only be set once.
+     * Marks this argument as optional. It defaults to false which is why there
+     * is no option to disable it as each option should only be set once.
      *
      * @return the same builder.
      */
@@ -77,8 +77,9 @@ public class CommandArgumentBuilder<T> {
     }
 
     /**
-     * Marks this argument as having variable length. It defaults to false which is why there is no option to disable it
-     * as each option should only be set to once.
+     * Marks this argument as having variable length. It defaults to false which
+     * is why there is no option to disable it as each option should only be set
+     * to once.
      *
      * @return the same builder.
      */
@@ -88,8 +89,9 @@ public class CommandArgumentBuilder<T> {
     }
 
     /**
-     * Marks this argument as usable by the console. It defaults to false which is why there is no option to disable it
-     * as each option should only be set once.
+     * Marks this argument as usable by the console. It defaults to false which
+     * is why there is no option to disable it as each option should only be set
+     * once.
      *
      * @return the same builder
      */
@@ -99,10 +101,11 @@ public class CommandArgumentBuilder<T> {
     }
 
     /**
-     * Returns the {@link CommandArgument} that has been built. Will throw an {@link IllegalStateException} if the
-     * parser has not been set as it is required.
+     * Returns the {@link CommandArgument} that has been built. Will throw an
+     * {@link IllegalStateException} if the parser has not been set as it is
+     * required.
      *
-     * @return
+     * @return the built {@link CommandArgument}
      */
     public CommandArgument<T> build() {
         if (argument.getName() == null) {
@@ -118,5 +121,4 @@ public class CommandArgumentBuilder<T> {
     public static <T> CommandArgumentBuilder<T> createBuilder(Class<T> type) {
         return new CommandArgumentBuilder<T>();
     }
-
 }

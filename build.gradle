@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ziluck'
-version = '2.2.0-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 description = 'Spigot plugin for enabling the Fortune enchantment on any block'
 
 archivesBaseName = 'fortuneblocks'
