@@ -966,3 +966,10 @@ ZOMBIE_PIGMAN_SPAWN_EGG~Zombie Pigman Spawn Egg
 ZOMBIE_SPAWN_EGG~Zombie Spawn Egg
 ZOMBIE_VILLAGER_SPAWN_EGG~Zombie Villager Spawn Egg
 ZOMBIE_WALL_HEAD~Zombie Wall Head
+BEEHIVE~Beehive
+BEE_NEST~Bee Nest
+BEE_SPAWN_EGG~Bee Spawn Egg
+HONEYCOMB~Honeycomb
+HONEYCOMB_BLOCK~Honeycomb Block
+HONEY_BLOCK~Honey Block
+HONEY_BOTTLE~Honey Bottle

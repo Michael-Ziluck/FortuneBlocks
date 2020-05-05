@@ -39,7 +39,7 @@ repositories {
 
 dependencies {
     // spigot
-    implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.14.4-R0.1-SNAPSHOT'
+    implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.15.2-R0.1-SNAPSHOT'
 
     // flyway
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.0.+'
